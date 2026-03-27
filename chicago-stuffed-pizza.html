@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chicago Stuffed Pizza Co. – Deep Dish Delivery</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #B91C1C;
+    --red-dark: #7F1D1D;
+    --red-light: #FEE2E2;
+    --gold: #B45309;
+    --gold-light: #FEF3C7;
+    --cream: #FAFAF7;
+    --charcoal: #1C1C1C;
+    --gray: #6B7280;
+    --border: #E5E7EB;
+    --white: #FFFFFF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: var(--cream);
+    color: var(--charcoal);
+    font-size: 15px;
+  }
+
+  /* ── TOP BAR ── */
+  .top-bar {
+    background: var(--red-dark);
+    color: #fff;
+    text-align: center;
+    padding: 8px 16px;
+    font-size: 13px;
+    letter-spacing: .4px;
+  }
+  .top-bar a { color: #FFD700; text-decoration: none; font-weight: 600; }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-inner {
+    max-width: 1240px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 24px;
+    gap: 16px;
+  }
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 700;
+    color: var(--red-dark);
+    line-height: 1.1;
+    text-decoration: none;
+  }
+  .logo span { display: block; font-size: 11px; font-weight: 400; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); font-family: 'Source Sans 3', sans-serif; }
+  nav { display: flex; gap: 24px; }
+  nav a { text-decoration: none; color: var(--charcoal); font-size: 14px; font-weight: 500; transition: color .2s; }
+  nav a:hover { color: var(--red); }
+  .header-actions { display: flex; gap: 16px; align-items: center; }
+  .cart-btn {
+    background: var(--red);
+    color: #fff;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+    transition: background .2s;
+  }
+  .cart-btn:hover { background: var(--red-dark); }
+  .cart-count { background: #fff; color: var(--red); border-radius: 50%; width: 18px; height: 18px; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+
+  /* ── BREADCRUMB ── */
+  .breadcrumb {
+    max-width: 1240px; margin: 0 auto;
+    padding: 12px 24px;
+    font-size: 13px;
+    color: var(--gray);
+    display: flex; gap: 6px; align-items: center;
+  }
+  .breadcrumb a { color: var(--gray); text-decoration: none; }
+  .breadcrumb a:hover { color: var(--red); text-decoration: underline; }
+  .breadcrumb .sep { color: #ccc; }
+
+  /* ── PRODUCT GRID ── */
+  .product-section {
+    max-width: 1240px; margin: 0 auto;
+    padding: 0 24px 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  /* LEFT: Gallery */
+  .gallery { position: sticky; top: 90px; }
+  .main-image {
+    width: 100%; aspect-ratio: 1/1;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f0ede8;
+    margin-bottom: 12px;
+    position: relative;
+    cursor: zoom-in;
+  }
+  .main-image img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+  .main-image:hover img { transform: scale(1.04); }
+  .badge-overlay {
+    position: absolute; top: 14px; left: 14px;
+    background: var(--red);
+    color: #fff; font-size: 11px; font-weight: 700;
+    padding: 4px 10px; border-radius: 20px;
+    letter-spacing: .6px; text-transform: uppercase;
+  }
+  .thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .thumb {
+    aspect-ratio: 1/1; border-radius: 6px; overflow: hidden;
+    background: #f0ede8;
+    border: 2px solid transparent;
+    cursor: pointer; transition: border-color .2s;
+  }
+  .thumb.active { border-color: var(--red); }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* RIGHT: Info */
+  .product-info {}
+  .product-tag {
+    font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 8px;
+  }
+  .product-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px; font-weight: 700;
+    line-height: 1.2;
+    color: var(--charcoal);
+    margin-bottom: 10px;
+  }
+  .review-row {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px;
+  }
+  .stars { color: #F59E0B; font-size: 15px; letter-spacing: 1px; }
+  .review-count { font-size: 13px; color: var(--red); text-decoration: underline; cursor: pointer; }
+  .price-row {
+    display: flex; align-items: baseline; gap: 12px;
+    margin-bottom: 6px;
+  }
+  .price { font-size: 28px; font-weight: 700; color: var(--charcoal); }
+  .price-old { font-size: 18px; text-decoration: line-through; color: var(--gray); }
+  .price-save { font-size: 13px; color: var(--red); font-weight: 600; }
+  .ships-note {
+    font-size: 13px; color: var(--gray);
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .ships-note svg { flex-shrink: 0; }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+  /* SKU selector */
+  .sku-label { font-size: 13px; font-weight: 600; color: var(--charcoal); margin-bottom: 8px; }
+  .sku-label span { color: var(--gray); font-weight: 400; }
+  .sku-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .sku-btn {
+    padding: 8px 16px; border-radius: 4px;
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    font-size: 13px; font-weight: 500;
+    cursor: pointer; transition: all .15s;
+    line-height: 1.3;
+    text-align: center;
+  }
+  .sku-btn:hover { border-color: var(--red); color: var(--red); }
+  .sku-btn.selected { border-color: var(--red); background: var(--red-light); color: var(--red-dark); font-weight: 700; }
+
+  /* Delivery date */
+  .delivery-box {
+    background: var(--gold-light);
+    border: 1px solid #FCD34D;
+    border-radius: 6px;
+    padding: 12px 14px;
+    font-size: 13px;
+    margin-bottom: 20px;
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .delivery-box .icon { font-size: 20px; margin-top: 1px; }
+  .delivery-box strong { display: block; margin-bottom: 2px; color: var(--gold); }
+
+  /* QTY + ADD */
+  .qty-add { display: flex; gap: 10px; margin-bottom: 14px; }
+  .qty-selector {
+    display: flex; align-items: center;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--white);
+  }
+  .qty-selector button {
+    width: 36px; height: 48px;
+    border: none; background: none;
+    font-size: 18px; cursor: pointer; color: var(--charcoal);
+    transition: background .15s;
+  }
+  .qty-selector button:hover { background: #f3f4f6; }
+  .qty-selector input {
+    width: 44px; height: 48px;
+    border: none; border-left: 1px solid var(--border); border-right: 1px solid var(--border);
+    text-align: center; font-size: 15px; font-family: inherit; font-weight: 600;
+    background: var(--white);
+    outline: none;
+  }
+  .add-to-cart {
+    flex: 1;
+    background: var(--red);
+    color: #fff; border: none;
+    padding: 14px 24px;
+    border-radius: 4px;
+    font-size: 16px; font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .2s;
+    letter-spacing: .3px;
+  }
+  .add-to-cart:hover { background: var(--red-dark); }
+  .add-to-cart:active { transform: scale(.98); }
+
+  .wishlist-btn {
+    width: 48px; height: 48px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    background: var(--white);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    transition: all .15s;
+  }
+  .wishlist-btn:hover { border-color: var(--red); color: var(--red); }
+
+  .guarantee {
+    display: flex; gap: 16px; margin-top: 16px;
+  }
+  .guarantee-item {
+    flex: 1;
+    display: flex; align-items: flex-start; gap: 8px;
+    font-size: 12px; color: var(--gray);
+  }
+  .guarantee-item .g-icon { font-size: 20px; flex-shrink: 0; }
+  .guarantee-item strong { display: block; color: var(--charcoal); font-size: 13px; margin-bottom: 2px; }
+
+  /* ── TABS / DETAILS ── */
+  .details-section {
+    max-width: 1240px; margin: 0 auto;
+    padding: 0 24px 64px;
+  }
+  .tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 0; }
+  .tab {
+    padding: 12px 24px;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    color: var(--gray);
+    transition: color .2s;
+  }
+  .tab.active { color: var(--red); border-bottom-color: var(--red); }
+  .tab:hover { color: var(--red); }
+  .tab-content { display: none; padding: 28px 0; }
+  .tab-content.active { display: block; }
+  .tab-content p { line-height: 1.7; color: #374151; margin-bottom: 12px; max-width: 700px; }
+  .tab-content ul { padding-left: 20px; }
+  .tab-content ul li { line-height: 1.8; color: #374151; font-size: 14px; }
+
+  .detail-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+    border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+    max-width: 600px; margin-top: 16px;
+  }
+  .detail-row { display: contents; }
+  .detail-row dt, .detail-row dd {
+    padding: 10px 16px; font-size: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .detail-row dt { background: #f9fafb; font-weight: 600; color: var(--charcoal); }
+  .detail-row dd { color: #374151; }
+  .detail-row:last-child dt, .detail-row:last-child dd { border-bottom: none; }
+
+  /* ── UPSELL ── */
+  .upsell-section {
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    padding: 48px 24px;
+  }
+  .upsell-inner { max-width: 1240px; margin: 0 auto; }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px; font-weight: 700;
+    margin-bottom: 24px;
+    color: var(--charcoal);
+  }
+  .upsell-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .upsell-card {
+    border: 1px solid var(--border);
+    border-radius: 8px; overflow: hidden;
+    background: var(--white);
+    transition: box-shadow .2s;
+    cursor: pointer;
+  }
+  .upsell-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.10); }
+  .upsell-img {
+    width: 100%; aspect-ratio: 1/1;
+    background: #f0ede8;
+    overflow: hidden;
+  }
+  .upsell-img img { width: 100%; height: 100%; object-fit: cover; }
+  .upsell-body { padding: 12px; }
+  .upsell-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; line-height: 1.3; }
+  .upsell-price { font-size: 15px; font-weight: 700; color: var(--red); }
+
+  /* ── REVIEWS ── */
+  .reviews-section {
+    max-width: 1240px; margin: 0 auto;
+    padding: 48px 24px;
+  }
+  .review-summary { display: flex; gap: 40px; align-items: center; margin-bottom: 32px; }
+  .review-big { text-align: center; }
+  .review-big .num { font-family: 'Playfair Display', serif; font-size: 64px; font-weight: 700; line-height: 1; color: var(--charcoal); }
+  .review-big .stars-lg { font-size: 22px; color: #F59E0B; }
+  .review-big small { display: block; font-size: 13px; color: var(--gray); margin-top: 4px; }
+  .review-bars { flex: 1; }
+  .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .bar-row span { font-size: 13px; min-width: 36px; }
+  .bar-track { flex: 1; height: 8px; background: #f3f4f6; border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; background: #F59E0B; border-radius: 4px; }
+  .review-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .review-card {
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 20px; background: var(--white);
+  }
+  .reviewer { font-weight: 700; font-size: 14px; margin-bottom: 2px; }
+  .review-date { font-size: 12px; color: var(--gray); margin-bottom: 8px; }
+  .review-card p { font-size: 14px; line-height: 1.6; color: #374151; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--charcoal);
+    color: #9CA3AF;
+    padding: 48px 24px 24px;
+  }
+  .footer-inner { max-width: 1240px; margin: 0 auto; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+  .footer-brand { }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700;
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+  footer p { font-size: 13px; line-height: 1.6; }
+  .footer-col h4 { color: var(--white); font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+  .footer-col a { display: block; color: #9CA3AF; text-decoration: none; font-size: 13px; margin-bottom: 6px; transition: color .2s; }
+  .footer-col a:hover { color: var(--white); }
+  .footer-bottom { border-top: 1px solid #374151; padding-top: 20px; display: flex; justify-content: space-between; font-size: 12px; }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: var(--charcoal); color: #fff;
+    padding: 12px 24px; border-radius: 6px;
+    font-size: 14px; font-weight: 600;
+    box-shadow: 0 8px 32px rgba(0,0,0,.25);
+    transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+    z-index: 999;
+    display: flex; align-items: center; gap: 10px;
+    pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast .check { color: #4ADE80; font-size: 18px; }
+
+  @media (max-width: 900px) {
+    .product-section { grid-template-columns: 1fr; gap: 24px; }
+    .gallery { position: static; }
+    .upsell-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    nav { display: none; }
+    .review-cards { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 500px) {
+    .upsell-grid { grid-template-columns: 1fr 1fr; }
+    .guarantee { flex-direction: column; gap: 10px; }
+    .footer-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  🍕 FREE SHIPPING on orders over $75 — <a href="#">Order by Sunday for Wed delivery</a>
+</div>
+
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo">Chicago Stuffed Pizza Co.<span>Est. 1982 · Deep Dish Delivered</span></a>
+    <nav>
+      <a href="#">Pizzas</a>
+      <a href="#">Bundles</a>
+      <a href="#">Gift Boxes</a>
+      <a href="#">Our Story</a>
+    </nav>
+    <div class="header-actions">
+      <button class="cart-btn" onclick="handleAddToCart()">
+        🛒 Cart <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="breadcrumb">
+  <a href="#">Home</a><span class="sep">›</span>
+  <a href="#">Deep Dish Pizzas</a><span class="sep">›</span>
+  <span>Chicago Stuffed Spinach & Sausage</span>
+</div>
+
+<section class="product-section">
+  <!-- GALLERY -->
+  <div class="gallery">
+    <div class="main-image" id="mainImage">
+      <img id="mainImg" src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&q=80" alt="Chicago Stuffed Spinach & Sausage Deep Dish Pizza">
+      <div class="badge-overlay">Fan Favorite</div>
+    </div>
+    <div class="thumbs">
+      <div class="thumb active" onclick="switchImg(this, 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&q=80')">
+        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&q=80" alt="">
+      </div>
+      <div class="thumb" onclick="switchImg(this, 'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=800&q=80')">
+        <img src="https://images.unsplash.com/photo-1628840042765-356cda07504e?w=200&q=80" alt="">
+      </div>
+      <div class="thumb" onclick="switchImg(this, 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80')">
+        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=200&q=80" alt="">
+      </div>
+      <div class="thumb" onclick="switchImg(this, 'https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?w=800&q=80')">
+        <img src="https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?w=200&q=80" alt="">
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCT INFO -->
+  <div class="product-info">
+    <div class="product-tag">Deep Dish · Chicago Style</div>
+    <h1 class="product-title">Chicago Stuffed Spinach &amp; Sausage Deep Dish Pizza</h1>
+
+    <div class="review-row">
+      <span class="stars">★★★★★</span>
+      <span style="font-size:13px;color:var(--gray);">4.9</span>
+      <span class="review-count">312 Reviews</span>
+    </div>
+
+    <div class="price-row">
+      <span class="price" id="displayPrice">$59.95</span>
+      <span class="price-old">$72.00</span>
+      <span class="price-save">Save $12.05</span>
+    </div>
+    <div class="ships-note">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      Ships frozen · Ready to bake in 45 min
+    </div>
+
+    <hr class="divider">
+
+    <!-- SKU SIZE -->
+    <div class="sku-label">Size <span id="selectedSize">— 9" (Feeds 2–3)</span></div>
+    <div class="sku-grid" id="sizeGrid">
+      <button class="sku-btn selected" onclick="selectSku(this, '9&quot; (Feeds 2–3)', '$59.95')" data-price="$59.95">
+        9" Pizza<br><small style="font-weight:400;color:var(--gray)">Feeds 2–3</small>
+      </button>
+      <button class="sku-btn" onclick="selectSku(this, '12&quot; (Feeds 4–5)', '$79.95')" data-price="$79.95">
+        12" Pizza<br><small style="font-weight:400;color:var(--gray)">Feeds 4–5</small>
+      </button>
+      <button class="sku-btn" onclick="selectSku(this, 'Party Pack (3×9&quot;)', '$159.95')" data-price="$159.95">
+        Party Pack<br><small style="font-weight:400;color:var(--gray)">3 × 9" Pizzas</small>
+      </button>
+    </div>
+
+    <!-- SKU CRUST -->
+    <div class="sku-label">Crust <span id="selectedCrust">— Classic Butter</span></div>
+    <div class="sku-grid" id="crustGrid">
+      <button class="sku-btn selected" onclick="selectCrust(this, 'Classic Butter')">Classic Butter</button>
+      <button class="sku-btn" onclick="selectCrust(this, 'Herb & Garlic')">Herb &amp; Garlic</button>
+      <button class="sku-btn" onclick="selectCrust(this, 'Whole Wheat')">Whole Wheat</button>
+    </div>
+
+    <!-- DELIVERY BOX -->
+    <div class="delivery-box">
+      <span class="icon">📦</span>
+      <div>
+        <strong>Order within 3 hrs to get it by Wednesday, April 1</strong>
+        Ships in an insulated cooler with dry ice · Arrives frozen &amp; oven-ready
+      </div>
+    </div>
+
+    <!-- QTY + ADD -->
+    <div class="qty-add">
+      <div class="qty-selector">
+        <button onclick="changeQty(-1)">−</button>
+        <input type="number" value="1" min="1" id="qty" readonly>
+        <button onclick="changeQty(1)">+</button>
+      </div>
+      <button class="add-to-cart" onclick="handleAddToCart()">Add to Cart</button>
+      <button class="wishlist-btn" onclick="this.textContent='❤️'" title="Save to wishlist">🤍</button>
+    </div>
+
+    <!-- GUARANTEE -->
+    <div class="guarantee">
+      <div class="guarantee-item">
+        <span class="g-icon">🏆</span>
+        <div><strong>Satisfaction Guarantee</strong>100% money-back if you're not delighted</div>
+      </div>
+      <div class="guarantee-item">
+        <span class="g-icon">❄️</span>
+        <div><strong>Ships Frozen</strong>Packed with dry ice for safe arrival</div>
+      </div>
+      <div class="guarantee-item">
+        <span class="g-icon">🎁</span>
+        <div><strong>Gift Ready</strong>Add a personal message at checkout</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TABS -->
+<div class="details-section">
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab(this,'desc')">Description</div>
+    <div class="tab" onclick="switchTab(this,'ingredients')">Ingredients</div>
+    <div class="tab" onclick="switchTab(this,'heating')">Heating Instructions</div>
+    <div class="tab" onclick="switchTab(this,'shipping')">Shipping &amp; Returns</div>
+  </div>
+
+  <div id="desc" class="tab-content active">
+    <p>Born on the South Side of Chicago, our Stuffed Deep Dish is the real deal — two layers of hand-pressed butter crust encasing a generous filling of whole-milk mozzarella, fresh spinach, and fennel-spiced Italian sausage, then blanketed in our slow-simmered San Marzano tomato sauce.</p>
+    <p>Every pizza is assembled by hand in our Chicago kitchen, flash-frozen to lock in freshness, and shipped directly to your door. All you need is an oven and 45 minutes.</p>
+    <dl class="detail-grid">
+      <div class="detail-row"><dt>Weight</dt><dd>2.8 lbs (9") / 4.1 lbs (12")</dd></div>
+      <div class="detail-row"><dt>Servings</dt><dd>2–3 per 9" / 4–5 per 12"</dd></div>
+      <div class="detail-row"><dt>Storage</dt><dd>Freeze up to 6 months</dd></div>
+      <div class="detail-row"><dt>Bake Time</dt><dd>40–45 min at 375°F</dd></div>
+      <div class="detail-row"><dt>Contains</dt><dd>Wheat, Milk, Pork</dd></div>
+      <div class="detail-row"><dt>Ships From</dt><dd>Chicago, IL</dd></div>
+    </dl>
+  </div>
+
+  <div id="ingredients" class="tab-content">
+    <p><strong>Crust:</strong> Enriched wheat flour, butter (cream, salt), water, yeast, sugar, salt, olive oil.</p>
+    <p><strong>Filling:</strong> Whole-milk mozzarella (pasteurized milk, cheese cultures, salt, enzymes), Italian sausage (pork, fennel seed, garlic, red pepper), fresh spinach, garlic, olive oil.</p>
+    <p><strong>Sauce:</strong> San Marzano crushed tomatoes, olive oil, fresh basil, garlic, salt, black pepper, dried oregano.</p>
+    <p style="font-size:13px;color:var(--gray);">Contains: Wheat, Milk, Pork. Produced in a facility that handles tree nuts and soy.</p>
+  </div>
+
+  <div id="heating" class="tab-content">
+    <ul>
+      <li><strong>Preheat</strong> oven to 375°F (190°C).</li>
+      <li><strong>Remove</strong> pizza from all packaging. Do not thaw before baking.</li>
+      <li><strong>Place</strong> frozen pizza on center oven rack.</li>
+      <li><strong>Bake</strong> 40–45 min until crust is golden and cheese is bubbling.</li>
+      <li><strong>Rest</strong> 5 minutes before cutting. Use a sharp serrated knife.</li>
+      <li>Internal temperature should reach 165°F.</li>
+    </ul>
+    <p style="margin-top:14px;font-size:13px;color:var(--gray);">Oven temps vary. Do not use microwave. Convection ovens: reduce to 350°F and check at 35 min.</p>
+  </div>
+
+  <div id="shipping" class="tab-content">
+    <p>All pizzas ship frozen via 2-day air in an insulated foam cooler with dry ice. Orders placed before 12PM CT Monday–Thursday ship same day.</p>
+    <p><strong>Free shipping</strong> on orders over $75. Standard rate of $14.95 on orders under $75.</p>
+    <p>We stand behind every pizza. If your order arrives damaged or you're unsatisfied for any reason, contact us within 7 days for a full refund or replacement — no questions asked.</p>
+  </div>
+</div>
+
+<!-- UPSELL -->
+<div class="upsell-section">
+  <div class="upsell-inner">
+    <div class="section-title">You Might Also Love</div>
+    <div class="upsell-grid">
+      <div class="upsell-card">
+        <div class="upsell-img"><img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400&q=80" alt="Pepperoni Deep Dish"></div>
+        <div class="upsell-body">
+          <div class="upsell-name">Classic Pepperoni Deep Dish</div>
+          <div class="upsell-price">$59.95</div>
+        </div>
+      </div>
+      <div class="upsell-card">
+        <div class="upsell-img"><img src="https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?w=400&q=80" alt="Margherita"></div>
+        <div class="upsell-body">
+          <div class="upsell-name">Four-Cheese Stuffed Deep Dish</div>
+          <div class="upsell-price">$57.95</div>
+        </div>
+      </div>
+      <div class="upsell-card">
+        <div class="upsell-img"><img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&q=80" alt="Gift Box"></div>
+        <div class="upsell-body">
+          <div class="upsell-name">Chicago Pizza Gift Box (2-pack)</div>
+          <div class="upsell-price">$109.95</div>
+        </div>
+      </div>
+      <div class="upsell-card">
+        <div class="upsell-img"><img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&q=80" alt="Sausage Only"></div>
+        <div class="upsell-body">
+          <div class="upsell-name">Italian Beef &amp; Giardiniera Deep Dish</div>
+          <div class="upsell-price">$62.95</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REVIEWS -->
+<div class="reviews-section">
+  <div class="section-title">Customer Reviews</div>
+  <div class="review-summary">
+    <div class="review-big">
+      <div class="num">4.9</div>
+      <div class="stars-lg">★★★★★</div>
+      <small>312 reviews</small>
+    </div>
+    <div class="review-bars">
+      <div class="bar-row"><span>5 ★</span><div class="bar-track"><div class="bar-fill" style="width:88%"></div></div><span style="color:var(--gray)">88%</span></div>
+      <div class="bar-row"><span>4 ★</span><div class="bar-track"><div class="bar-fill" style="width:9%"></div></div><span style="color:var(--gray)">9%</span></div>
+      <div class="bar-row"><span>3 ★</span><div class="bar-track"><div class="bar-fill" style="width:2%"></div></div><span style="color:var(--gray)">2%</span></div>
+      <div class="bar-row"><span>2 ★</span><div class="bar-track"><div class="bar-fill" style="width:1%"></div></div><span style="color:var(--gray)">1%</span></div>
+      <div class="bar-row"><span>1 ★</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span style="color:var(--gray)">0%</span></div>
+    </div>
+  </div>
+  <div class="review-cards">
+    <div class="review-card">
+      <div class="stars" style="font-size:14px;margin-bottom:4px;">★★★★★</div>
+      <div class="reviewer">Michael T. — Naperville, IL</div>
+      <div class="review-date">March 14, 2026 · Verified Purchase</div>
+      <p>Tastes exactly like Lou Malnati's without leaving the house. The crust is buttery, the sausage is fennel-forward, and the sauce has real depth. My family demolished a 12" in 15 minutes flat.</p>
+    </div>
+    <div class="review-card">
+      <div class="stars" style="font-size:14px;margin-bottom:4px;">★★★★★</div>
+      <div class="reviewer">Sarah K. — Austin, TX</div>
+      <div class="review-date">March 9, 2026 · Verified Purchase</div>
+      <p>I grew up in Chicago and have been chasing this flavor for 10 years since moving south. This is the closest thing I've found. Arrived perfectly frozen, baked up gorgeous. Already ordered two more.</p>
+    </div>
+    <div class="review-card">
+      <div class="stars" style="font-size:14px;margin-bottom:4px;">★★★★☆</div>
+      <div class="reviewer">James R. — New York, NY</div>
+      <div class="review-date">February 28, 2026 · Verified Purchase</div>
+      <p>As a New Yorker I was skeptical, but this genuinely won me over. The stuffed crust concept is wild and delicious. Only wish the 9" were a bit bigger — I ordered the 12" on my reorder.</p>
+    </div>
+    <div class="review-card">
+      <div class="stars" style="font-size:14px;margin-bottom:4px;">★★★★★</div>
+      <div class="reviewer">Linda M. — Denver, CO</div>
+      <div class="review-date">February 21, 2026 · Verified Purchase</div>
+      <p>Ordered the Party Pack for a football watch party — absolute hit. Everyone was asking where I got it. Packaging was excellent, dry ice kept everything solid even with a shipping delay.</p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">Chicago Stuffed Pizza Co.</div>
+        <p>Authentic Chicago deep dish, shipped frozen and oven-ready to your door since 1982. Made with the same recipes, the same ingredients, the same love.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <a href="#">Deep Dish Pizzas</a>
+        <a href="#">Party Packs</a>
+        <a href="#">Gift Boxes</a>
+        <a href="#">Bundles &amp; Deals</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">Our Story</a>
+        <a href="#">Blog</a>
+        <a href="#">Press</a>
+        <a href="#">Careers</a>
+      </div>
+      <div class="footer-col">
+        <h4>Help</h4>
+        <a href="#">FAQ</a>
+        <a href="#">Track Order</a>
+        <a href="#">Returns</a>
+        <a href="#">Contact Us</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Chicago Stuffed Pizza Co. All rights reserved.</span>
+      <span>Privacy Policy · Terms of Use</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Toast -->
+<div class="toast" id="toast"><span class="check">✓</span> Added to cart!</div>
+
+<script>
+  let cartCount = 0;
+
+  function changeQty(delta) {
+    const input = document.getElementById('qty');
+    const val = parseInt(input.value) + delta;
+    if (val >= 1) input.value = val;
+  }
+
+  function selectSku(btn, label, price) {
+    document.querySelectorAll('#sizeGrid .sku-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    document.getElementById('selectedSize').textContent = '— ' + label;
+    document.getElementById('displayPrice').textContent = price;
+  }
+
+  function selectCrust(btn, label) {
+    document.querySelectorAll('#crustGrid .sku-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    document.getElementById('selectedCrust').textContent = '— ' + label;
+  }
+
+  function switchImg(thumb, src) {
+    document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+    thumb.classList.add('active');
+    document.getElementById('mainImg').src = src;
+  }
+
+  function switchTab(tab, id) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(id).classList.add('active');
+  }
+
+  function handleAddToCart() {
+    const qty = parseInt(document.getElementById('qty').value);
+    cartCount += qty;
+    document.getElementById('cartCount').textContent = cartCount;
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+</script>
+</body>
+</html>
