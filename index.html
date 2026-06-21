@@ -4,23 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#14170F">
-<title>Field Scan — SquachAcers Foot Alignment Tracker</title>
+<title>MODTOES Scanner</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#14170F;
-    --panel:#1D2317;
-    --panel-2:#242B1C;
-    --line:#3A3E2C;
-    --forest:#209680;
-    --burnt:#D96C00;
-    --gold:#D4AF37;
-    --bronze:#CD7F32;
-    --olive:#556B2F;
-    --text:#EDE7D9;
-    --text-dim:#9CA68C;
-    --radius:6px;
+    --bg:#14170F; --panel:#1D2317; --panel-2:#242B1C; --line:#3A3E2C;
+    --forest:#209680; --burnt:#D96C00; --gold:#D4AF37; --bronze:#CD7F32; --olive:#556B2F;
+    --text:#EDE7D9; --text-dim:#9CA68C; --radius:6px;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
@@ -29,253 +20,93 @@
     background-image:
       repeating-radial-gradient(circle at 12% 18%, rgba(32,150,128,0.06) 0px, rgba(32,150,128,0.06) 1px, transparent 1.5px, transparent 34px),
       repeating-radial-gradient(circle at 85% 78%, rgba(205,127,50,0.05) 0px, rgba(205,127,50,0.05) 1px, transparent 1.5px, transparent 46px);
-    color:var(--text);
-    font-family:'Inter',system-ui,sans-serif;
-    min-height:100vh;
-    -webkit-font-smoothing:antialiased;
+    color:var(--text); font-family:'Inter',system-ui,sans-serif; min-height:100vh; -webkit-font-smoothing:antialiased;
   }
-  #app{
-    max-width:480px;
-    margin:0 auto;
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-    padding:18px 18px 28px;
-  }
-  header.brand{
-    display:flex;
-    align-items:baseline;
-    justify-content:space-between;
-    padding:6px 2px 16px;
-    border-bottom:1px solid var(--line);
-    margin-bottom:18px;
-  }
-  header.brand .wordmark{
-    font-family:'Oswald',sans-serif;
-    font-weight:700;
-    font-size:18px;
-    letter-spacing:0.04em;
-    text-transform:uppercase;
-  }
+  #app{max-width:480px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; padding:18px 18px 28px;}
+  header.brand{display:flex; align-items:center; justify-content:space-between; padding:6px 2px 16px; border-bottom:1px solid var(--line); margin-bottom:18px;}
+  header.brand .wordmark{font-family:'Oswald',sans-serif; font-weight:700; font-size:18px; letter-spacing:0.04em; text-transform:uppercase;}
   header.brand .wordmark span{color:var(--gold);}
-  header.brand .tag{
-    font-family:'JetBrains Mono',monospace;
-    font-size:10px;
-    color:var(--text-dim);
-    letter-spacing:0.06em;
+  header.brand .tag{font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--text-dim); letter-spacing:0.06em;}
+  header.brand .keybtn{
+    font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-dim); background:none;
+    border:1px solid var(--line); border-radius:4px; padding:5px 8px; cursor:pointer; display:none;
   }
-  .steps{
-    display:flex;
-    gap:6px;
-    margin-bottom:20px;
-  }
-  .steps .dot{
-    flex:1;
-    height:3px;
-    background:var(--line);
-    border-radius:2px;
-    transition:background 0.25s;
-  }
-  .steps .dot.done{background:var(--forest);}
-  .steps .dot.active{background:var(--gold);}
+  .steps{display:flex; gap:6px; margin-bottom:20px;}
+  .steps .dot{flex:1; height:3px; background:var(--line); border-radius:2px; transition:background 0.25s;}
+  .steps .dot.done{background:var(--forest);} .steps .dot.active{background:var(--gold);}
 
-  .screen{display:none; flex:1; flex-direction:column;}
-  .screen.active{display:flex;}
+  .screen{display:none; flex:1; flex-direction:column;} .screen.active{display:flex;}
+  h1.title{font-family:'Oswald',sans-serif; font-size:23px; font-weight:600; letter-spacing:0.01em; margin:0 0 10px;}
+  p.lede{color:var(--text-dim); font-size:14.5px; line-height:1.55; margin:0 0 18px;}
 
-  h1.title{
-    font-family:'Oswald',sans-serif;
-    font-size:24px;
-    font-weight:600;
-    letter-spacing:0.01em;
-    margin:0 0 10px;
-  }
-  p.lede{
-    color:var(--text-dim);
-    font-size:14.5px;
-    line-height:1.55;
-    margin:0 0 18px;
-  }
-  .field-card{
-    background:var(--panel);
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:16px;
-    margin-bottom:14px;
-  }
-  .field-card .label{
-    font-family:'JetBrains Mono',monospace;
-    font-size:10.5px;
-    letter-spacing:0.08em;
-    color:var(--bronze);
-    text-transform:uppercase;
-    margin-bottom:6px;
-    display:block;
-  }
+  .field-card{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:16px; margin-bottom:14px;}
+  .field-card .label{font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.08em; color:var(--bronze); text-transform:uppercase; margin-bottom:6px; display:block;}
   .field-card .body-text{font-size:14px; line-height:1.55; color:var(--text);}
-  .field-card ol{margin:6px 0 0; padding-left:18px;}
-  .field-card li{margin-bottom:8px; font-size:14px; line-height:1.5;}
+  .field-card ol{margin:6px 0 0; padding-left:18px;} .field-card li{margin-bottom:8px; font-size:14px; line-height:1.5;}
+
+  label.input-label{font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.06em; color:var(--text-dim); text-transform:uppercase; display:block; margin-bottom:7px;}
+  input[type="password"], input[type="text"]{
+    width:100%; background:var(--panel-2); border:1px solid var(--line); color:var(--text);
+    border-radius:var(--radius); padding:13px 12px; font-family:'JetBrains Mono',monospace; font-size:13.5px; margin-bottom:6px;
+  }
+  input:focus-visible, select:focus-visible, .btn:focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
+  a.inline-link{color:var(--gold); text-decoration:underline;}
 
   .btn{
-    font-family:'Oswald',sans-serif;
-    font-weight:600;
-    font-size:14px;
-    letter-spacing:0.03em;
-    text-transform:uppercase;
-    border:none;
-    border-radius:var(--radius);
-    padding:14px 18px;
-    cursor:pointer;
-    width:100%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    transition:transform 0.1s, opacity 0.15s;
+    font-family:'Oswald',sans-serif; font-weight:600; font-size:14px; letter-spacing:0.03em; text-transform:uppercase;
+    border:none; border-radius:var(--radius); padding:14px 18px; cursor:pointer; width:100%;
+    display:flex; align-items:center; justify-content:center; gap:8px; transition:transform 0.1s, opacity 0.15s;
   }
   .btn:active{transform:scale(0.98);}
-  .btn:focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
   .btn-primary{background:var(--burnt); color:#14170F;}
   .btn-secondary{background:transparent; color:var(--text); border:1px solid var(--line);}
   .btn-ghost{background:transparent; color:var(--text-dim); font-size:12.5px; padding:10px;}
   .btn[disabled]{opacity:0.4; cursor:not-allowed;}
-  .btn-row{display:flex; gap:10px; margin-top:10px;}
-  .btn-row .btn{flex:1;}
+  .btn-row{display:flex; gap:10px; margin-top:10px;} .btn-row .btn{flex:1;}
 
   .toggle-row{display:flex; gap:10px; margin-bottom:14px;}
-  .toggle{
-    flex:1;
-    text-align:center;
-    padding:12px 8px;
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    font-family:'Oswald',sans-serif;
-    font-size:13px;
-    letter-spacing:0.03em;
-    cursor:pointer;
-    color:var(--text-dim);
-    background:var(--panel);
-  }
+  .toggle{flex:1; text-align:center; padding:12px 8px; border:1px solid var(--line); border-radius:var(--radius); font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.03em; cursor:pointer; color:var(--text-dim); background:var(--panel);}
   .toggle.selected{border-color:var(--gold); color:var(--gold); background:var(--panel-2);}
 
-  .check-row{display:flex; align-items:center; gap:10px; margin-bottom:14px; font-size:13.5px; color:var(--text);}
+  .check-row{display:flex; align-items:center; gap:10px; margin-bottom:14px; font-size:13.5px; color:var(--text); flex-wrap:wrap;}
   .check-row input{width:18px; height:18px; accent-color:var(--forest);}
+  select.sheet-select{background:var(--panel-2); color:var(--text); border:1px solid var(--line); border-radius:var(--radius); padding:8px 10px; font-family:'Inter',sans-serif; font-size:13.5px; margin-left:auto;}
 
-  select.sheet-select{
-    background:var(--panel-2);
-    color:var(--text);
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:8px 10px;
-    font-family:'Inter',sans-serif;
-    font-size:13.5px;
-    margin-left:auto;
-  }
+  .photo-wrap{position:relative; width:100%; aspect-ratio:3/4; background:#000; border-radius:var(--radius); overflow:hidden; margin-bottom:12px; border:1px solid var(--line); display:flex; align-items:center; justify-content:center;}
+  .photo-wrap img{width:100%; height:100%; object-fit:cover; display:block;}
+  .photo-empty{color:var(--text-dim); font-size:13px; text-align:center; padding:20px; font-family:'JetBrains Mono',monospace;}
+  .visually-hidden{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;}
+  label.btn{text-decoration:none;}
 
-  /* Viewfinder */
-  .viewfinder{
-    position:relative;
-    width:100%;
-    aspect-ratio:3/4;
-    background:#000;
-    border-radius:var(--radius);
-    overflow:hidden;
-    margin-bottom:12px;
-  }
-  .viewfinder video, .viewfinder canvas{
-    width:100%; height:100%; object-fit:cover; display:block;
-  }
-  .vf-corner{
-    position:absolute; width:26px; height:26px; border-color:var(--gold); opacity:0.85;
-  }
-  .vf-corner.tl{top:14px; left:14px; border-top:3px solid; border-left:3px solid;}
-  .vf-corner.tr{top:14px; right:14px; border-top:3px solid; border-right:3px solid;}
-  .vf-corner.bl{bottom:14px; left:14px; border-bottom:3px solid; border-left:3px solid;}
-  .vf-corner.br{bottom:14px; right:14px; border-bottom:3px solid; border-right:3px solid;}
-  .vf-cross{
-    position:absolute; top:50%; left:50%; width:1px; height:24px;
-    background:rgba(237,231,217,0.5); transform:translate(-50%,-50%);
-  }
-  .vf-cross::after{
-    content:''; position:absolute; top:50%; left:50%; width:24px; height:1px;
-    background:rgba(237,231,217,0.5); transform:translate(-50%,-50%);
-  }
-  .vf-scanline{
-    position:absolute; left:0; right:0; height:2px;
-    background:linear-gradient(90deg, transparent, var(--forest), transparent);
-    animation:scan 1.8s linear infinite;
-  }
+  .vf-scanline{position:absolute; left:0; right:0; height:2px; background:linear-gradient(90deg, transparent, var(--forest), transparent); animation:scan 1.8s linear infinite;}
   @keyframes scan{0%{top:8%;} 100%{top:92%;}}
   @media (prefers-reduced-motion: reduce){ .vf-scanline{animation:none; display:none;} }
+  .analyzing-readout{font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--gold); text-align:center; margin-top:14px; letter-spacing:0.04em;}
 
-  .vf-readout{
-    position:absolute; bottom:10px; left:10px; right:10px;
-    font-family:'JetBrains Mono',monospace; font-size:10.5px;
-    color:var(--gold); letter-spacing:0.04em;
-    background:rgba(20,23,15,0.6); border-radius:4px;
-    padding:6px 8px; display:flex; justify-content:space-between;
-  }
-  .vf-readout .ok{color:var(--forest);}
-  .vf-readout .warn{color:var(--burnt);}
-  .vf-error{
-    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-    text-align:center; padding:24px; font-size:13px; color:var(--text-dim);
-    flex-direction:column; gap:12px;
-  }
-
-  /* Marking canvas */
-  .mark-wrap{position:relative; width:100%; border-radius:var(--radius); overflow:hidden; margin-bottom:12px; background:#000;}
-  .mark-wrap canvas{width:100%; display:block; touch-action:none;}
-  .mark-hint{
-    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--gold);
-    background:var(--panel-2); border:1px solid var(--line); border-radius:var(--radius);
-    padding:10px 12px; margin-bottom:12px; letter-spacing:0.02em;
-  }
-
-  /* Result */
-  .result-hero{
-    text-align:center; padding:26px 16px; background:var(--panel);
-    border:1px solid var(--line); border-radius:var(--radius); margin-bottom:14px;
-  }
-  .result-hero .angle{
-    font-family:'JetBrains Mono',monospace; font-weight:700; font-size:46px; color:var(--text);
-  }
-  .result-hero .angle-label{
-    font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.08em;
-    color:var(--text-dim); text-transform:uppercase; margin-top:4px;
-  }
-  .badge{
-    display:inline-block; margin-top:14px; padding:7px 16px; border-radius:30px;
-    font-family:'Oswald',sans-serif; font-size:13px; font-weight:600; letter-spacing:0.05em;
-    text-transform:uppercase;
-  }
+  .badge{display:inline-block; margin-top:14px; padding:7px 16px; border-radius:30px; font-family:'Oswald',sans-serif; font-size:13px; font-weight:600; letter-spacing:0.05em; text-transform:uppercase;}
   .badge.normal{background:rgba(32,150,128,0.18); color:var(--forest); border:1px solid var(--forest);}
   .badge.mild{background:rgba(212,175,55,0.18); color:var(--gold); border:1px solid var(--gold);}
   .badge.moderate{background:rgba(217,108,0,0.18); color:var(--burnt); border:1px solid var(--burnt);}
   .badge.severe{background:rgba(205,127,50,0.2); color:#E8956B; border:1px solid #E8956B;}
+  .badge.undetermined{background:rgba(156,166,140,0.18); color:var(--text-dim); border:1px solid var(--line);}
 
-  .sub-readout{
-    display:flex; justify-content:space-between; padding:10px 2px;
-    border-bottom:1px solid var(--line); font-size:13.5px;
-  }
+  .result-hero{text-align:center; padding:24px 16px; background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); margin-bottom:14px;}
+  .result-hero .angle{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:40px; color:var(--text);}
+  .result-hero .angle-label{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.08em; color:var(--text-dim); text-transform:uppercase; margin-top:4px;}
+  .result-hero .summary{font-size:13.5px; color:var(--text); margin-top:14px; line-height:1.5;}
+
+  .sub-readout{display:flex; justify-content:space-between; gap:10px; padding:10px 2px; border-bottom:1px solid var(--line); font-size:13.5px;}
   .sub-readout:last-child{border-bottom:none;}
-  .sub-readout .k{color:var(--text-dim);}
-  .sub-readout .v{font-family:'JetBrains Mono',monospace; color:var(--text);}
+  .sub-readout .k{color:var(--text-dim); flex-shrink:0;} .sub-readout .v{font-family:'JetBrains Mono',monospace; color:var(--text); text-align:right;}
 
-  .disclaimer{
-    font-size:11.5px; line-height:1.5; color:var(--text-dim); margin-top:16px; padding-top:14px;
-    border-top:1px solid var(--line);
-  }
-
-  .log-list{margin-top:10px;}
-  .log-row{
-    display:flex; justify-content:space-between; align-items:center;
-    padding:9px 0; border-bottom:1px solid var(--line); font-size:13px;
-  }
+  .error-box{background:rgba(217,108,0,0.12); border:1px solid var(--burnt); border-radius:var(--radius); padding:14px; font-size:13.5px; color:var(--text); margin-bottom:14px; line-height:1.5;}
+  .disclaimer{font-size:11.5px; line-height:1.5; color:var(--text-dim); margin-top:16px; padding-top:14px; border-top:1px solid var(--line);}
+  .log-row{display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px solid var(--line); font-size:13px;}
   .log-row:last-child{border-bottom:none;}
   .log-row .side{color:var(--text-dim); font-family:'JetBrains Mono',monospace; font-size:11px;}
   .log-row .val{font-family:'JetBrains Mono',monospace;}
-
   .spacer{flex:1;}
+  footer.tagline{text-align:center; font-family:'Oswald',sans-serif; font-size:10.5px; letter-spacing:0.18em; color:var(--bronze); margin-top:18px; text-transform:uppercase;}
 </style>
 </head>
 <body>
@@ -283,41 +114,41 @@
 
   <header class="brand">
     <div>
-      <div class="wordmark">SquachAcers <span>Field Scan</span></div>
-      <div class="tag">FOOT SHAPE &amp; ALIGNMENT TRACKER</div>
+      <div class="wordmark">MODTOES <span>Scanner</span></div>
+      <div class="tag">AI FOOT SHAPE &amp; ALIGNMENT SCAN</div>
     </div>
+    <button class="keybtn" id="btnChangeKey">change key</button>
   </header>
 
   <div class="steps" id="stepDots">
-    <div class="dot" data-i="0"></div>
-    <div class="dot" data-i="1"></div>
-    <div class="dot" data-i="2"></div>
-    <div class="dot" data-i="3"></div>
+    <div class="dot" data-i="0"></div><div class="dot" data-i="1"></div>
+    <div class="dot" data-i="2"></div><div class="dot" data-i="3"></div>
   </div>
 
-  <!-- INTRO -->
-  <section class="screen active" data-screen="intro">
-    <h1 class="title">Track your foot's alignment</h1>
-    <p class="lede">A guided photo scan estimates how your big toe joint is tracking, using the same angle podiatrists reference on an X-ray — captured from your phone instead.</p>
+  <!-- KEY -->
+  <section class="screen active" data-screen="key">
+    <h1 class="title">Connect your API key</h1>
+    <p class="lede">This scanner sends your foot photo to Claude for real AI analysis — measurements, shape, alignment, and a modular spacer recommendation. It needs your own Anthropic API key to do that.</p>
 
     <div class="field-card">
-      <span class="label">What you'll need</span>
-      <ol>
-        <li>A hard, flat floor — no thick rugs</li>
-        <li>A sheet of A4 or Letter paper (optional, gives you a size reference)</li>
-        <li>About a minute, standing with full weight on the foot you're scanning</li>
-      </ol>
+      <span class="label">Your key</span>
+      <input type="password" id="apiKeyInput" placeholder="sk-ant-..." autocomplete="off" spellcheck="false">
+      <p class="body-text" style="color:var(--text-dim); font-size:12.5px; margin-top:6px;">Kept in memory for this session only — never saved, never written to this file. It's sent directly from your browser to Anthropic with each scan, so it's visible in your browser's network tab. Fine for personal use; don't share this page publicly with your key already in it.</p>
+    </div>
+
+    <div class="field-card">
+      <span class="label">Don't have one</span>
+      <p class="body-text">Create a key at <a class="inline-link" href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a>. Pay-as-you-go, no subscription — a handful of scans costs pennies.</p>
     </div>
 
     <div class="spacer"></div>
-    <button class="btn btn-primary" id="btnStart">Begin scan</button>
-    <button class="btn btn-ghost" id="btnViewLog" style="display:none;">View past scans →</button>
+    <button class="btn btn-primary" id="btnSaveKey" disabled>Continue</button>
   </section>
 
   <!-- PREP -->
   <section class="screen" data-screen="prep">
     <h1 class="title">Set up the shot</h1>
-    <p class="lede">Choose the foot you're scanning and whether you're using a paper reference for scale.</p>
+    <p class="lede">Choose the foot you're scanning. A paper reference in frame helps Claude estimate real measurements — without one, you'll still get shape and alignment notes, just no precise sizing.</p>
 
     <span class="label" style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.08em; color:var(--bronze); text-transform:uppercase; display:block; margin-bottom:8px;">Foot</span>
     <div class="toggle-row">
@@ -327,7 +158,7 @@
 
     <div class="check-row">
       <input type="checkbox" id="useScale" checked>
-      <label for="useScale">I'm placing a reference sheet under my foot</label>
+      <label for="useScale">I'll include a reference sheet in the photo</label>
       <select class="sheet-select" id="sheetType">
         <option value="297">A4</option>
         <option value="279">Letter</option>
@@ -336,405 +167,316 @@
 
     <div class="field-card">
       <span class="label">Positioning</span>
-      <p class="body-text">Lay the paper flat on the floor, long edge pointing toward your toes. Stand with the foot centered on it, full weight down. Hold the phone flat, facing straight down, about 18 inches above your foot.</p>
+      <p class="body-text">Lay the paper flat on a hard floor. Stand with full weight on the foot, centered on the paper. Shoot straight down from about 18 inches, with the whole foot and paper edge visible in frame.</p>
     </div>
 
     <div class="spacer"></div>
-    <button class="btn btn-primary" id="btnToCapture">Continue to camera</button>
-    <button class="btn btn-secondary" id="btnBackIntro">Back</button>
+    <button class="btn btn-primary" id="btnToCapture">Continue to photo</button>
+    <button class="btn btn-secondary" id="btnBackKey">Back</button>
   </section>
 
   <!-- CAPTURE -->
   <section class="screen" data-screen="capture">
-    <h1 class="title">Frame the shot</h1>
-    <p class="lede">Center your foot in the brackets. Hold the phone level — the readout below will confirm.</p>
+    <h1 class="title">Take the photo</h1>
+    <p class="lede">Use your camera or choose an existing photo.</p>
 
-    <div class="viewfinder" id="viewfinder">
-      <video id="video" autoplay playsinline muted></video>
-      <div class="vf-scanline"></div>
-      <div class="vf-corner tl"></div>
-      <div class="vf-corner tr"></div>
-      <div class="vf-corner bl"></div>
-      <div class="vf-corner br"></div>
-      <div class="vf-cross"></div>
-      <div class="vf-readout">
-        <span id="vfStatus">Requesting camera…</span>
-        <span id="vfTilt"></span>
-      </div>
-      <div class="vf-error" id="vfError" style="display:none;"></div>
+    <div class="photo-wrap" id="photoWrap">
+      <div class="photo-empty" id="photoEmptyMsg">No photo yet</div>
     </div>
+    <input type="file" accept="image/*" capture="environment" id="fileInput" class="visually-hidden">
 
-    <button class="btn btn-primary" id="btnCapture" disabled>Capture frame</button>
-    <button class="btn btn-secondary" id="btnBackPrep">Back</button>
+    <label class="btn btn-secondary" for="fileInput" id="btnPickPhoto">Take / choose photo</label>
+    <button class="btn btn-primary" id="btnAnalyze" disabled style="margin-top:10px;">Analyze foot</button>
+    <button class="btn btn-ghost" id="btnBackPrep">Back</button>
+
+    <div class="error-box" id="captureError" style="display:none;"></div>
   </section>
 
-  <!-- MARK -->
-  <section class="screen" data-screen="mark">
-    <h1 class="title">Mark the joint</h1>
-    <div class="mark-hint" id="markHint">Tap the points as instructed below.</div>
-
-    <div class="mark-wrap">
-      <canvas id="markCanvas"></canvas>
+  <!-- ANALYZING -->
+  <section class="screen" data-screen="analyzing">
+    <h1 class="title">Reading the scan</h1>
+    <div class="photo-wrap" id="analyzingPhotoWrap">
+      <div class="vf-scanline"></div>
     </div>
-
-    <div class="btn-row">
-      <button class="btn btn-secondary" id="btnUndo">Undo point</button>
-      <button class="btn btn-primary" id="btnCalc" disabled>Calculate</button>
-    </div>
-    <button class="btn btn-ghost" id="btnRetake">Retake photo</button>
+    <div class="analyzing-readout" id="analyzingStatus">Sending to Claude…</div>
   </section>
 
   <!-- RESULT -->
   <section class="screen" data-screen="result">
-    <div class="result-hero">
-      <div class="angle" id="resAngle">—°</div>
-      <div class="angle-label">Estimated hallux valgus angle</div>
-      <div class="badge" id="resBadge">—</div>
-    </div>
+    <div class="error-box" id="resultError" style="display:none;"></div>
 
-    <div class="field-card" id="resDetailsCard">
-      <span class="label">Reading</span>
-      <div id="resCopy" class="body-text"></div>
-      <div id="resSubReadouts"></div>
-    </div>
+    <div id="resultContent" style="display:none;">
+      <div class="result-hero">
+        <div class="angle" id="resAngle">—°</div>
+        <div class="angle-label">Estimated hallux valgus angle</div>
+        <div class="badge" id="resBadge">—</div>
+        <div class="summary" id="resSummary"></div>
+      </div>
 
-    <div class="field-card" id="resLogCard" style="display:none;">
-      <span class="label">Field log — this session</span>
-      <div class="log-list" id="logList"></div>
+      <div class="field-card">
+        <span class="label">Measurements</span>
+        <div id="resMeasure"></div>
+      </div>
+
+      <div class="field-card">
+        <span class="label">Shape &amp; arch</span>
+        <div class="body-text" id="resShape"></div>
+      </div>
+
+      <div class="field-card">
+        <span class="label">Pressure notes</span>
+        <div class="body-text" id="resPressure"></div>
+      </div>
+
+      <div class="field-card">
+        <span class="label">MODTOES spacer guidance</span>
+        <div class="body-text" id="resSpacer"></div>
+      </div>
+
+      <div class="field-card">
+        <span class="label">Confidence &amp; limits</span>
+        <div class="body-text" id="resConfidence"></div>
+      </div>
+
+      <div class="field-card" id="resLogCard" style="display:none;">
+        <span class="label">Field log — this session</span>
+        <div id="logList"></div>
+      </div>
     </div>
 
     <div class="spacer"></div>
     <button class="btn btn-primary" id="btnScanOther">Scan other foot</button>
-    <button class="btn btn-secondary" id="btnStartOver">Start over</button>
+    <button class="btn btn-secondary" id="btnRetakeFromResult">Retake this photo</button>
+    <button class="btn btn-ghost" id="btnStartOver">Start over</button>
 
     <div class="disclaimer">
       This tool estimates foot shape and joint alignment from a single photo for fit and comfort purposes. It is not a diagnostic device and does not replace a weight-bearing X-ray or a podiatrist's evaluation. If you have pain, numbness, or a worsening bunion, see a foot care professional.
     </div>
   </section>
 
+  <footer class="tagline">Removable. Modular. Yours.</footer>
 </div>
 
 <script>
 (function(){
-  const screens = ['intro','prep','capture','mark','result'];
-  const stepFor = {intro:0, prep:0, capture:1, mark:2, result:3};
+  const stepFor = {key:0, prep:0, capture:1, analyzing:2, result:3};
   const state = {
-    side: 'left',
-    useScale: true,
-    sheetMM: 297,
-    stream: null,
-    capturedImg: null, // Image object
-    canvasW: 0, canvasH: 0,
-    points: [], // {x,y}
-    needsScalePoints: true,
-    scalePxPerMM: null,
-    orientationOK: false,
-    log: []
+    apiKey:'', side:'left', useScale:true, sheetMM:297,
+    photoBase64:null, photoDataUrl:null, log:[]
   };
 
   function showScreen(name){
-    document.querySelectorAll('.screen').forEach(s=>{
-      s.classList.toggle('active', s.dataset.screen===name);
-    });
+    document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active', s.dataset.screen===name));
     document.querySelectorAll('#stepDots .dot').forEach(d=>{
-      const i = parseInt(d.dataset.i,10);
-      const cur = stepFor[name];
-      d.classList.toggle('active', i===cur);
-      d.classList.toggle('done', i<cur);
+      const i = parseInt(d.dataset.i,10), cur = stepFor[name];
+      d.classList.toggle('active', i===cur); d.classList.toggle('done', i<cur);
     });
+    document.getElementById('btnChangeKey').style.display = state.apiKey ? 'block' : 'none';
   }
 
-  // ---------- INTRO ----------
-  document.getElementById('btnStart').addEventListener('click', ()=>{
+  // ---------- KEY ----------
+  const apiKeyInput = document.getElementById('apiKeyInput');
+  const btnSaveKey = document.getElementById('btnSaveKey');
+  apiKeyInput.addEventListener('input', ()=>{ btnSaveKey.disabled = apiKeyInput.value.trim().length < 10; });
+  btnSaveKey.addEventListener('click', ()=>{
+    state.apiKey = apiKeyInput.value.trim();
     showScreen('prep');
+  });
+  document.getElementById('btnChangeKey').addEventListener('click', ()=>{
+    showScreen('key');
   });
 
   // ---------- PREP ----------
   document.querySelectorAll('.toggle[data-side]').forEach(t=>{
     t.addEventListener('click', ()=>{
       document.querySelectorAll('.toggle[data-side]').forEach(x=>x.classList.remove('selected'));
-      t.classList.add('selected');
-      state.side = t.dataset.side;
+      t.classList.add('selected'); state.side = t.dataset.side;
     });
   });
-  document.getElementById('useScale').addEventListener('change', (e)=>{
-    state.useScale = e.target.checked;
-    state.needsScalePoints = state.useScale;
-  });
-  document.getElementById('sheetType').addEventListener('change', (e)=>{
-    state.sheetMM = parseInt(e.target.value,10);
-  });
-  document.getElementById('btnBackIntro').addEventListener('click', ()=> showScreen('intro'));
-
-  document.getElementById('btnToCapture').addEventListener('click', async ()=>{
+  document.getElementById('useScale').addEventListener('change', e=> state.useScale = e.target.checked);
+  document.getElementById('sheetType').addEventListener('change', e=> state.sheetMM = parseInt(e.target.value,10));
+  document.getElementById('btnBackKey').addEventListener('click', ()=> showScreen('key'));
+  document.getElementById('btnToCapture').addEventListener('click', ()=>{
     state.useScale = document.getElementById('useScale').checked;
-    state.needsScalePoints = state.useScale;
     state.sheetMM = parseInt(document.getElementById('sheetType').value,10);
-
-    // Request device orientation permission on iOS (must be in user-gesture call stack)
-    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function'){
-      try { await DeviceOrientationEvent.requestPermission(); } catch(e){ /* ignore, fallback handled below */ }
-    }
     showScreen('capture');
-    startCamera();
-    startTilt();
   });
 
   // ---------- CAPTURE ----------
-  const video = document.getElementById('video');
-  const vfStatus = document.getElementById('vfStatus');
-  const vfTilt = document.getElementById('vfTilt');
-  const vfError = document.getElementById('vfError');
-  const btnCapture = document.getElementById('btnCapture');
+  const fileInput = document.getElementById('fileInput');
+  const photoWrap = document.getElementById('photoWrap');
+  const btnAnalyze = document.getElementById('btnAnalyze');
+  const captureError = document.getElementById('captureError');
 
-  async function startCamera(){
-    vfError.style.display = 'none';
-    video.style.display = 'block';
-    btnCapture.disabled = true;
-    vfStatus.textContent = 'Requesting camera…';
-    try{
-      if (state.stream){ state.stream.getTracks().forEach(t=>t.stop()); }
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: 'environment' }, width:{ideal:1280}, height:{ideal:1280} },
-        audio: false
-      });
-      state.stream = stream;
-      video.srcObject = stream;
-      vfStatus.textContent = 'Camera live';
-      btnCapture.disabled = false;
-    }catch(err){
-      video.style.display = 'none';
-      vfError.style.display = 'flex';
-      vfError.innerHTML = 'Camera unavailable.<br><span style="color:var(--text-dim)">This usually means camera permission was blocked, or the page isn\\'t running on a secure (https) connection. Open this file from a hosted https:// address and allow camera access when prompted.</span>';
-      vfStatus.textContent = 'No camera';
-    }
-  }
+  document.getElementById('btnBackPrep').addEventListener('click', ()=> showScreen('prep'));
 
-  let tiltHandler = null;
-  function startTilt(){
-    if (tiltHandler) return;
-    if (typeof window.DeviceOrientationEvent === 'undefined'){
-      vfTilt.textContent = '';
-      return;
-    }
-    tiltHandler = function(e){
-      if (e.beta === null || e.gamma === null){ vfTilt.textContent=''; return; }
-      // Phone screen facing down over the foot: beta tends toward ±180.
-      const flatness = Math.abs(180 - Math.abs(e.beta)) + Math.abs(e.gamma);
-      if (flatness < 10){
-        vfTilt.innerHTML = '<span class="ok">● LEVEL</span>';
-      } else {
-        vfTilt.innerHTML = '<span class="warn">● TILT — adjust</span>';
-      }
-    };
-    window.addEventListener('deviceorientation', tiltHandler);
-    setTimeout(()=>{
-      if (vfTilt.textContent===''){ vfTilt.textContent='Align by eye'; }
-    }, 1500);
-  }
-  function stopTilt(){
-    if (tiltHandler){ window.removeEventListener('deviceorientation', tiltHandler); tiltHandler=null; }
-  }
-  function stopCamera(){
-    if (state.stream){ state.stream.getTracks().forEach(t=>t.stop()); state.stream=null; }
-  }
-
-  document.getElementById('btnBackPrep').addEventListener('click', ()=>{
-    stopCamera(); stopTilt();
-    showScreen('prep');
-  });
-
-  btnCapture.addEventListener('click', ()=>{
-    const w = video.videoWidth || 720, h = video.videoHeight || 960;
-    const off = document.createElement('canvas');
-    off.width = w; off.height = h;
-    off.getContext('2d').drawImage(video, 0, 0, w, h);
-    const img = new Image();
-    img.onload = ()=>{
-      state.capturedImg = img;
-      state.canvasW = w; state.canvasH = h;
-      state.points = [];
-      stopCamera(); stopTilt();
-      enterMarkScreen();
-    };
-    img.src = off.toDataURL('image/jpeg', 0.92);
-  });
-
-  // ---------- MARK ----------
-  const markCanvas = document.getElementById('markCanvas');
-  const mctx = markCanvas.getContext('2d');
-  const markHint = document.getElementById('markHint');
-  const btnCalc = document.getElementById('btnCalc');
-  const btnUndo = document.getElementById('btnUndo');
-
-  function pointSequence(){
-    return state.needsScalePoints
-      ? ['Tap one corner of the paper\\'s long edge', 'Tap the other end of that same edge', 'Tap your heel / inner arch', 'Tap the big toe joint (the bunion bump)', 'Tap the tip of your big toe']
-      : ['Tap your heel / inner arch', 'Tap the big toe joint (the bunion bump)', 'Tap the tip of your big toe'];
-  }
-
-  function enterMarkScreen(){
-    markCanvas.width = state.canvasW;
-    markCanvas.height = state.canvasH;
-    redrawMark();
-    updateMarkHint();
-    showScreen('mark');
-  }
-
-  function updateMarkHint(){
-    const seq = pointSequence();
-    if (state.points.length < seq.length){
-      markHint.textContent = (state.points.length+1) + ' / ' + seq.length + ' — ' + seq[state.points.length];
-      btnCalc.disabled = true;
-    } else {
-      markHint.textContent = 'All points placed. Tap Calculate, or undo to adjust.';
-      btnCalc.disabled = false;
-    }
-  }
-
-  function redrawMark(){
-    mctx.clearRect(0,0,markCanvas.width, markCanvas.height);
-    mctx.drawImage(state.capturedImg, 0, 0, markCanvas.width, markCanvas.height);
-    const seq = pointSequence();
-    const colors = state.needsScalePoints
-      ? ['#D4AF37','#D4AF37','#209680','#D96C00','#209680']
-      : ['#209680','#D96C00','#209680'];
-
-    state.points.forEach((p,i)=>{
-      mctx.beginPath();
-      mctx.arc(p.x, p.y, 9, 0, Math.PI*2);
-      mctx.fillStyle = colors[i] || '#EDE7D9';
-      mctx.fill();
-      mctx.lineWidth = 2;
-      mctx.strokeStyle = '#14170F';
-      mctx.stroke();
-      mctx.font = 'bold 16px monospace';
-      mctx.fillStyle = '#14170F';
-      mctx.textAlign = 'center';
-      mctx.textBaseline = 'middle';
-      mctx.fillText(String(i+1), p.x, p.y);
+  function resizeImageFile(file, maxDim, quality){
+    return new Promise((resolve, reject)=>{
+      const reader = new FileReader();
+      reader.onload = (e)=>{
+        const img = new Image();
+        img.onload = ()=>{
+          let w = img.width, h = img.height;
+          if (w >= h && w > maxDim){ h = Math.round(h * maxDim / w); w = maxDim; }
+          else if (h > w && h > maxDim){ w = Math.round(w * maxDim / h); h = maxDim; }
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          const dataUrl = canvas.toDataURL('image/jpeg', quality);
+          resolve({ dataUrl, base64: dataUrl.split(',')[1] });
+        };
+        img.onerror = ()=> reject(new Error('Could not read that image.'));
+        img.src = e.target.result;
+      };
+      reader.onerror = ()=> reject(new Error('Could not read that file.'));
+      reader.readAsDataURL(file);
     });
-
-    const offset = state.needsScalePoints ? 2 : 0;
-    if (state.needsScalePoints && state.points.length >= 2){
-      drawLine(state.points[0], state.points[1], '#D4AF37', true);
-    }
-    if (state.points.length >= offset+2){
-      drawLine(state.points[offset], state.points[offset+1], '#9CA68C');
-    }
-    if (state.points.length >= offset+3){
-      drawLine(state.points[offset+1], state.points[offset+2], '#9CA68C');
-    }
   }
 
-  function drawLine(a,b,color,dashed){
-    mctx.beginPath();
-    mctx.moveTo(a.x,a.y);
-    mctx.lineTo(b.x,b.y);
-    mctx.strokeStyle = color;
-    mctx.lineWidth = 3;
-    if (dashed) mctx.setLineDash([8,6]); else mctx.setLineDash([]);
-    mctx.stroke();
-    mctx.setLineDash([]);
+  fileInput.addEventListener('change', async (e)=>{
+    captureError.style.display = 'none';
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    try{
+      const { dataUrl, base64 } = await resizeImageFile(file, 1024, 0.85);
+      state.photoDataUrl = dataUrl; state.photoBase64 = base64;
+      photoWrap.innerHTML = '<img src="'+dataUrl+'" alt="Captured foot photo">';
+      btnAnalyze.disabled = false;
+    }catch(err){
+      captureError.style.display = 'block';
+      captureError.textContent = err.message || 'Could not process that photo. Try another.';
+    }
+  });
+
+  btnAnalyze.addEventListener('click', runAnalysis);
+
+  // ---------- ANALYSIS ----------
+  const analyzingPhotoWrap = document.getElementById('analyzingPhotoWrap');
+  const analyzingStatus = document.getElementById('analyzingStatus');
+
+  function buildSchemaPrompt(){
+    const refLine = state.useScale
+      ? 'A reference sheet of paper ('+(state.sheetMM===297?'A4, 210x297mm':'US Letter, 215.9x279.4mm')+') should be visible in the frame — use its known dimensions to estimate real-world measurements where possible.'
+      : 'No size reference is in frame, so give measurements as approximate/proportional only, or null if you cannot estimate them.';
+
+    return [
+      'You are analyzing a single photo of a human foot for MODTOES, a modular footwear brand. This is a foot shape and alignment TRACKER for fit and comfort purposes — it is explicitly NOT a medical diagnostic device. Never use definitive diagnostic language; use observational, descriptive language ("appears to", "visually estimated").',
+      refLine,
+      'The foot shown is the '+state.side+' foot.',
+      'Respond with ONLY a single raw JSON object — no markdown, no code fences, no commentary before or after. Match exactly this schema:',
+      '{',
+      '"footLengthEstimate": string or null,',
+      '"footWidthEstimate": string or null,',
+      '"archType": "low" | "neutral" | "high" | "undetermined",',
+      '"shapeClassification": short string describing forefoot/toe shape,',
+      '"halluxValgusDegrees": number or null (best visual estimate of the hallux valgus angle),',
+      '"halluxValgusCategory": "normal" | "mild" | "moderate" | "severe" | "undetermined",',
+      '"pressureNotes": short string on likely pressure distribution (heel/ball/arch/toe),',
+      '"spacerGuidance": short string recommending which MODTOES modular toe-spacer positions and widths would likely help, in plain language,',
+      '"confidenceNote": short string on the limits of a single-photo estimate,',
+      '"summary": one or two plain-language sentences summarizing the scan',
+      '}',
+      'If the photo does not clearly show a foot, set all numeric/category fields to null or "undetermined" and explain why in summary.'
+    ].join('\n');
   }
 
-  function canvasPosFromEvent(e){
-    const rect = markCanvas.getBoundingClientRect();
-    const scaleX = markCanvas.width / rect.width;
-    const scaleY = markCanvas.height / rect.height;
-    const clientX = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0].clientX);
-    const clientY = e.clientY !== undefined ? e.clientY : (e.touches && e.touches[0].clientY);
-    return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
+  async function runAnalysis(){
+    showScreen('analyzing');
+    analyzingPhotoWrap.style.backgroundImage = state.photoDataUrl ? 'url('+state.photoDataUrl+')' : '';
+    analyzingPhotoWrap.style.backgroundSize = 'cover';
+    analyzingPhotoWrap.style.backgroundPosition = 'center';
+    analyzingStatus.textContent = 'Sending to Claude…';
+
+    try{
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'x-api-key': state.apiKey,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 1024,
+          system: buildSchemaPrompt(),
+          messages: [{
+            role: 'user',
+            content: [
+              { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: state.photoBase64 } },
+              { type: 'text', text: 'Analyze this foot photo per the schema in the system prompt.' }
+            ]
+          }]
+        })
+      });
+
+      analyzingStatus.textContent = 'Reading response…';
+      const data = await response.json();
+
+      if (!response.ok){
+        const msg = (data && data.error && data.error.message) ? data.error.message : ('Request failed ('+response.status+').');
+        throw new Error(msg);
+      }
+
+      const textBlocks = (data.content || []).filter(b=>b.type==='text').map(b=>b.text).join('\n');
+      const cleaned = textBlocks.replace(/```json|```/g, '').trim();
+      let parsed;
+      try{ parsed = JSON.parse(cleaned); }
+      catch(e){ throw new Error('Got a response back, but could not parse it as JSON. Try again.'); }
+
+      renderResult(parsed);
+      showScreen('result');
+    }catch(err){
+      const errEl = document.getElementById('resultError');
+      const contentEl = document.getElementById('resultContent');
+      errEl.style.display = 'block';
+      contentEl.style.display = 'none';
+      let msg = err.message || 'Something went wrong.';
+      if (/401|unauthorized|x-api-key/i.test(msg)) msg += ' Check that your API key is correct and active.';
+      errEl.textContent = msg;
+      showScreen('result');
+    }
   }
-
-  markCanvas.addEventListener('pointerdown', (e)=>{
-    const seq = pointSequence();
-    if (state.points.length >= seq.length) return;
-    const pos = canvasPosFromEvent(e);
-    state.points.push(pos);
-    redrawMark();
-    updateMarkHint();
-  });
-
-  btnUndo.addEventListener('click', ()=>{
-    state.points.pop();
-    redrawMark();
-    updateMarkHint();
-  });
-
-  document.getElementById('btnRetake').addEventListener('click', ()=>{
-    state.points = [];
-    showScreen('capture');
-    startCamera();
-    startTilt();
-  });
-
-  btnCalc.addEventListener('click', ()=>{
-    computeResult();
-    showScreen('result');
-  });
 
   // ---------- RESULT ----------
-  function dist(a,b){ return Math.hypot(b.x-a.x, b.y-a.y); }
-
-  function angleAtVertex(A,B,C){
-    const v1 = {x:A.x-B.x, y:A.y-B.y};
-    const v2 = {x:C.x-B.x, y:C.y-B.y};
-    const dot = v1.x*v2.x + v1.y*v2.y;
-    const mag1 = Math.hypot(v1.x,v1.y), mag2 = Math.hypot(v2.x,v2.y);
-    if (mag1===0 || mag2===0) return null;
-    let cos = dot/(mag1*mag2);
-    cos = Math.max(-1, Math.min(1, cos));
-    return Math.acos(cos) * 180/Math.PI; // interior angle ABC
+  function classifyBadge(cat){
+    const map = {normal:'Normal range', mild:'Mild deviation', moderate:'Moderate deviation', severe:'Severe deviation', undetermined:'Unable to read'};
+    return map[cat] || 'Unable to read';
   }
 
-  function classify(hva){
-    if (hva < 15) return {key:'normal', label:'Normal range', copy:'Your big toe is tracking straight relative to the joint. No alignment concerns from this scan.'};
-    if (hva < 20) return {key:'mild', label:'Mild deviation', copy:'A slight inward drift at the joint. Worth keeping an eye on, especially in narrow toe boxes.'};
-    if (hva < 40) return {key:'moderate', label:'Moderate deviation', copy:'A noticeable bunion angle. Wide, modular, or adjustable toe-box footwear can reduce pressure on the joint day to day.'};
-    return {key:'severe', label:'Severe deviation', copy:'A pronounced angle at the joint. This is worth a conversation with a podiatrist, alongside footwear that takes pressure off the area.'};
-  }
+  function renderResult(r){
+    document.getElementById('resultError').style.display = 'none';
+    document.getElementById('resultContent').style.display = 'block';
 
-  function computeResult(){
-    const offset = state.needsScalePoints ? 2 : 0;
-    const A = state.points[offset];     // heel / arch
-    const B = state.points[offset+1];   // MTP joint / bunion
-    const C = state.points[offset+2];   // toe tip
+    document.getElementById('resAngle').textContent = (r.halluxValgusDegrees !== null && r.halluxValgusDegrees !== undefined)
+      ? Number(r.halluxValgusDegrees).toFixed(1)+'°' : '—°';
 
-    const interior = angleAtVertex(A,B,C);
-    let hva = interior===null ? null : Math.max(0, 180 - interior);
-
-    let scalePxPerMM = null;
-    if (state.needsScalePoints){
-      const p1 = state.points[0], p2 = state.points[1];
-      const px = dist(p1,p2);
-      if (px > 0) scalePxPerMM = px / state.sheetMM;
-    }
-
-    const cat = hva===null ? {key:'normal',label:'Unable to read',copy:'The marked points were too close together to calculate an angle. Try retaking the photo.'} : classify(hva);
-
-    document.getElementById('resAngle').textContent = hva===null ? '—°' : hva.toFixed(1)+'°';
+    const cat = r.halluxValgusCategory || 'undetermined';
     const badgeEl = document.getElementById('resBadge');
-    badgeEl.className = 'badge ' + cat.key;
-    badgeEl.textContent = cat.label;
-    document.getElementById('resCopy').textContent = cat.copy;
+    badgeEl.className = 'badge ' + cat;
+    badgeEl.textContent = classifyBadge(cat);
 
-    const subEl = document.getElementById('resSubReadouts');
-    subEl.innerHTML = '';
-    function addRow(k,v){
+    document.getElementById('resSummary').textContent = r.summary || '';
+
+    const measureEl = document.getElementById('resMeasure');
+    measureEl.innerHTML = '';
+    function addRow(container, k, v){
       const row = document.createElement('div');
       row.className = 'sub-readout';
-      row.innerHTML = '<span class="k">'+k+'</span><span class="v">'+v+'</span>';
-      subEl.appendChild(row);
+      row.innerHTML = '<span class="k">'+k+'</span><span class="v">'+(v || '—')+'</span>';
+      container.appendChild(row);
     }
-    addRow('Foot scanned', state.side === 'left' ? 'Left' : 'Right');
-    if (scalePxPerMM){
-      const toeLenMM = dist(B,C) / scalePxPerMM;
-      addRow('Toe length (joint to tip)', (toeLenMM/10).toFixed(1)+' cm');
-    }
-    addRow('Reference', state.needsScalePoints ? (state.sheetMM===297?'A4 sheet':'Letter sheet') : 'None (angle only)');
+    addRow(measureEl, 'Foot scanned', state.side === 'left' ? 'Left' : 'Right');
+    addRow(measureEl, 'Length', r.footLengthEstimate);
+    addRow(measureEl, 'Width', r.footWidthEstimate);
+    addRow(measureEl, 'Reference used', state.useScale ? (state.sheetMM===297?'A4 sheet':'Letter sheet') : 'None');
 
-    state.log.push({side: state.side, hva: hva, cat: cat.key, label: cat.label});
+    document.getElementById('resShape').textContent = [r.archType ? ('Arch: '+r.archType+'. ') : '', r.shapeClassification || ''].join('');
+    document.getElementById('resPressure').textContent = r.pressureNotes || 'Not enough information from this photo.';
+    document.getElementById('resSpacer').textContent = r.spacerGuidance || 'Not enough information from this photo.';
+    document.getElementById('resConfidence').textContent = r.confidenceNote || 'Single-photo estimate — actual fit may vary.';
+
+    state.log.push({ side: state.side, hva: r.halluxValgusDegrees, label: classifyBadge(cat) });
     renderLog();
   }
 
@@ -747,31 +489,36 @@
     state.log.forEach(entry=>{
       const row = document.createElement('div');
       row.className = 'log-row';
-      row.innerHTML = '<span class="side">'+(entry.side==='left'?'LEFT':'RIGHT')+'</span><span>'+entry.label+'</span><span class="val">'+(entry.hva===null?'—':entry.hva.toFixed(1)+'°')+'</span>';
+      const valTxt = (entry.hva !== null && entry.hva !== undefined) ? Number(entry.hva).toFixed(1)+'°' : '—';
+      row.innerHTML = '<span class="side">'+(entry.side==='left'?'LEFT':'RIGHT')+'</span><span>'+entry.label+'</span><span class="val">'+valTxt+'</span>';
       list.appendChild(row);
     });
-    document.getElementById('btnViewLog').style.display = state.log.length ? 'block' : 'none';
+  }
+
+  function resetPhoto(){
+    state.photoBase64 = null; state.photoDataUrl = null;
+    photoWrap.innerHTML = '<div class="photo-empty" id="photoEmptyMsg">No photo yet</div>';
+    btnAnalyze.disabled = true;
+    captureError.style.display = 'none';
+    fileInput.value = '';
   }
 
   document.getElementById('btnScanOther').addEventListener('click', ()=>{
     state.side = state.side === 'left' ? 'right' : 'left';
-    document.querySelectorAll('.toggle[data-side]').forEach(x=>{
-      x.classList.toggle('selected', x.dataset.side === state.side);
-    });
-    state.points = [];
+    document.querySelectorAll('.toggle[data-side]').forEach(x=> x.classList.toggle('selected', x.dataset.side === state.side));
+    resetPhoto();
+    showScreen('prep');
+  });
+  document.getElementById('btnRetakeFromResult').addEventListener('click', ()=>{
+    resetPhoto();
+    showScreen('capture');
+  });
+  document.getElementById('btnStartOver').addEventListener('click', ()=>{
+    resetPhoto();
     showScreen('prep');
   });
 
-  document.getElementById('btnStartOver').addEventListener('click', ()=>{
-    state.points = [];
-    showScreen('intro');
-  });
-
-  document.getElementById('btnViewLog').addEventListener('click', ()=>{
-    showScreen('result');
-  });
-
-  showScreen('intro');
+  showScreen('key');
 })();
 </script>
 </body>
