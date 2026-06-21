@@ -2,750 +2,777 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chicago Stuffed Pizza Co. – Deep Dish Delivery</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14170F">
+<title>Field Scan — SquachAcers Foot Alignment Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --red: #B91C1C;
-    --red-dark: #7F1D1D;
-    --red-light: #FEE2E2;
-    --gold: #B45309;
-    --gold-light: #FEF3C7;
-    --cream: #FAFAF7;
-    --charcoal: #1C1C1C;
-    --gray: #6B7280;
-    --border: #E5E7EB;
-    --white: #FFFFFF;
+  :root{
+    --bg:#14170F;
+    --panel:#1D2317;
+    --panel-2:#242B1C;
+    --line:#3A3E2C;
+    --forest:#209680;
+    --burnt:#D96C00;
+    --gold:#D4AF37;
+    --bronze:#CD7F32;
+    --olive:#556B2F;
+    --text:#EDE7D9;
+    --text-dim:#9CA68C;
+    --radius:6px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    background-image:
+      repeating-radial-gradient(circle at 12% 18%, rgba(32,150,128,0.06) 0px, rgba(32,150,128,0.06) 1px, transparent 1.5px, transparent 34px),
+      repeating-radial-gradient(circle at 85% 78%, rgba(205,127,50,0.05) 0px, rgba(205,127,50,0.05) 1px, transparent 1.5px, transparent 46px);
+    color:var(--text);
+    font-family:'Inter',system-ui,sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  #app{
+    max-width:480px;
+    margin:0 auto;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    padding:18px 18px 28px;
+  }
+  header.brand{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    padding:6px 2px 16px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:18px;
+  }
+  header.brand .wordmark{
+    font-family:'Oswald',sans-serif;
+    font-weight:700;
+    font-size:18px;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+  }
+  header.brand .wordmark span{color:var(--gold);}
+  header.brand .tag{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    color:var(--text-dim);
+    letter-spacing:0.06em;
+  }
+  .steps{
+    display:flex;
+    gap:6px;
+    margin-bottom:20px;
+  }
+  .steps .dot{
+    flex:1;
+    height:3px;
+    background:var(--line);
+    border-radius:2px;
+    transition:background 0.25s;
+  }
+  .steps .dot.done{background:var(--forest);}
+  .steps .dot.active{background:var(--gold);}
+
+  .screen{display:none; flex:1; flex-direction:column;}
+  .screen.active{display:flex;}
+
+  h1.title{
+    font-family:'Oswald',sans-serif;
+    font-size:24px;
+    font-weight:600;
+    letter-spacing:0.01em;
+    margin:0 0 10px;
+  }
+  p.lede{
+    color:var(--text-dim);
+    font-size:14.5px;
+    line-height:1.55;
+    margin:0 0 18px;
+  }
+  .field-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:16px;
+    margin-bottom:14px;
+  }
+  .field-card .label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:0.08em;
+    color:var(--bronze);
+    text-transform:uppercase;
+    margin-bottom:6px;
+    display:block;
+  }
+  .field-card .body-text{font-size:14px; line-height:1.55; color:var(--text);}
+  .field-card ol{margin:6px 0 0; padding-left:18px;}
+  .field-card li{margin-bottom:8px; font-size:14px; line-height:1.5;}
+
+  .btn{
+    font-family:'Oswald',sans-serif;
+    font-weight:600;
+    font-size:14px;
+    letter-spacing:0.03em;
+    text-transform:uppercase;
+    border:none;
+    border-radius:var(--radius);
+    padding:14px 18px;
+    cursor:pointer;
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    transition:transform 0.1s, opacity 0.15s;
+  }
+  .btn:active{transform:scale(0.98);}
+  .btn:focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
+  .btn-primary{background:var(--burnt); color:#14170F;}
+  .btn-secondary{background:transparent; color:var(--text); border:1px solid var(--line);}
+  .btn-ghost{background:transparent; color:var(--text-dim); font-size:12.5px; padding:10px;}
+  .btn[disabled]{opacity:0.4; cursor:not-allowed;}
+  .btn-row{display:flex; gap:10px; margin-top:10px;}
+  .btn-row .btn{flex:1;}
+
+  .toggle-row{display:flex; gap:10px; margin-bottom:14px;}
+  .toggle{
+    flex:1;
+    text-align:center;
+    padding:12px 8px;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    font-family:'Oswald',sans-serif;
+    font-size:13px;
+    letter-spacing:0.03em;
+    cursor:pointer;
+    color:var(--text-dim);
+    background:var(--panel);
+  }
+  .toggle.selected{border-color:var(--gold); color:var(--gold); background:var(--panel-2);}
+
+  .check-row{display:flex; align-items:center; gap:10px; margin-bottom:14px; font-size:13.5px; color:var(--text);}
+  .check-row input{width:18px; height:18px; accent-color:var(--forest);}
+
+  select.sheet-select{
+    background:var(--panel-2);
+    color:var(--text);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:8px 10px;
+    font-family:'Inter',sans-serif;
+    font-size:13.5px;
+    margin-left:auto;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* Viewfinder */
+  .viewfinder{
+    position:relative;
+    width:100%;
+    aspect-ratio:3/4;
+    background:#000;
+    border-radius:var(--radius);
+    overflow:hidden;
+    margin-bottom:12px;
+  }
+  .viewfinder video, .viewfinder canvas{
+    width:100%; height:100%; object-fit:cover; display:block;
+  }
+  .vf-corner{
+    position:absolute; width:26px; height:26px; border-color:var(--gold); opacity:0.85;
+  }
+  .vf-corner.tl{top:14px; left:14px; border-top:3px solid; border-left:3px solid;}
+  .vf-corner.tr{top:14px; right:14px; border-top:3px solid; border-right:3px solid;}
+  .vf-corner.bl{bottom:14px; left:14px; border-bottom:3px solid; border-left:3px solid;}
+  .vf-corner.br{bottom:14px; right:14px; border-bottom:3px solid; border-right:3px solid;}
+  .vf-cross{
+    position:absolute; top:50%; left:50%; width:1px; height:24px;
+    background:rgba(237,231,217,0.5); transform:translate(-50%,-50%);
+  }
+  .vf-cross::after{
+    content:''; position:absolute; top:50%; left:50%; width:24px; height:1px;
+    background:rgba(237,231,217,0.5); transform:translate(-50%,-50%);
+  }
+  .vf-scanline{
+    position:absolute; left:0; right:0; height:2px;
+    background:linear-gradient(90deg, transparent, var(--forest), transparent);
+    animation:scan 1.8s linear infinite;
+  }
+  @keyframes scan{0%{top:8%;} 100%{top:92%;}}
+  @media (prefers-reduced-motion: reduce){ .vf-scanline{animation:none; display:none;} }
 
-  body {
-    font-family: 'Source Sans 3', sans-serif;
-    background: var(--cream);
-    color: var(--charcoal);
-    font-size: 15px;
+  .vf-readout{
+    position:absolute; bottom:10px; left:10px; right:10px;
+    font-family:'JetBrains Mono',monospace; font-size:10.5px;
+    color:var(--gold); letter-spacing:0.04em;
+    background:rgba(20,23,15,0.6); border-radius:4px;
+    padding:6px 8px; display:flex; justify-content:space-between;
   }
-
-  /* ── TOP BAR ── */
-  .top-bar {
-    background: var(--red-dark);
-    color: #fff;
-    text-align: center;
-    padding: 8px 16px;
-    font-size: 13px;
-    letter-spacing: .4px;
-  }
-  .top-bar a { color: #FFD700; text-decoration: none; font-weight: 600; }
-
-  /* ── HEADER ── */
-  header {
-    background: var(--white);
-    border-bottom: 1px solid var(--border);
-    position: sticky; top: 0; z-index: 100;
-  }
-  .header-inner {
-    max-width: 1240px; margin: 0 auto;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 24px;
-    gap: 16px;
-  }
-  .logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 22px; font-weight: 700;
-    color: var(--red-dark);
-    line-height: 1.1;
-    text-decoration: none;
-  }
-  .logo span { display: block; font-size: 11px; font-weight: 400; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); font-family: 'Source Sans 3', sans-serif; }
-  nav { display: flex; gap: 24px; }
-  nav a { text-decoration: none; color: var(--charcoal); font-size: 14px; font-weight: 500; transition: color .2s; }
-  nav a:hover { color: var(--red); }
-  .header-actions { display: flex; gap: 16px; align-items: center; }
-  .cart-btn {
-    background: var(--red);
-    color: #fff;
-    border: none;
-    padding: 9px 18px;
-    border-radius: 4px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex; align-items: center; gap: 6px;
-    transition: background .2s;
-  }
-  .cart-btn:hover { background: var(--red-dark); }
-  .cart-count { background: #fff; color: var(--red); border-radius: 50%; width: 18px; height: 18px; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
-
-  /* ── BREADCRUMB ── */
-  .breadcrumb {
-    max-width: 1240px; margin: 0 auto;
-    padding: 12px 24px;
-    font-size: 13px;
-    color: var(--gray);
-    display: flex; gap: 6px; align-items: center;
-  }
-  .breadcrumb a { color: var(--gray); text-decoration: none; }
-  .breadcrumb a:hover { color: var(--red); text-decoration: underline; }
-  .breadcrumb .sep { color: #ccc; }
-
-  /* ── PRODUCT GRID ── */
-  .product-section {
-    max-width: 1240px; margin: 0 auto;
-    padding: 0 24px 48px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 48px;
-    align-items: start;
+  .vf-readout .ok{color:var(--forest);}
+  .vf-readout .warn{color:var(--burnt);}
+  .vf-error{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    text-align:center; padding:24px; font-size:13px; color:var(--text-dim);
+    flex-direction:column; gap:12px;
   }
 
-  /* LEFT: Gallery */
-  .gallery { position: sticky; top: 90px; }
-  .main-image {
-    width: 100%; aspect-ratio: 1/1;
-    border-radius: 8px;
-    overflow: hidden;
-    background: #f0ede8;
-    margin-bottom: 12px;
-    position: relative;
-    cursor: zoom-in;
+  /* Marking canvas */
+  .mark-wrap{position:relative; width:100%; border-radius:var(--radius); overflow:hidden; margin-bottom:12px; background:#000;}
+  .mark-wrap canvas{width:100%; display:block; touch-action:none;}
+  .mark-hint{
+    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--gold);
+    background:var(--panel-2); border:1px solid var(--line); border-radius:var(--radius);
+    padding:10px 12px; margin-bottom:12px; letter-spacing:0.02em;
   }
-  .main-image img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
-  .main-image:hover img { transform: scale(1.04); }
-  .badge-overlay {
-    position: absolute; top: 14px; left: 14px;
-    background: var(--red);
-    color: #fff; font-size: 11px; font-weight: 700;
-    padding: 4px 10px; border-radius: 20px;
-    letter-spacing: .6px; text-transform: uppercase;
-  }
-  .thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-  .thumb {
-    aspect-ratio: 1/1; border-radius: 6px; overflow: hidden;
-    background: #f0ede8;
-    border: 2px solid transparent;
-    cursor: pointer; transition: border-color .2s;
-  }
-  .thumb.active { border-color: var(--red); }
-  .thumb img { width: 100%; height: 100%; object-fit: cover; }
 
-  /* RIGHT: Info */
-  .product-info {}
-  .product-tag {
-    font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
-    color: var(--gold); margin-bottom: 8px;
+  /* Result */
+  .result-hero{
+    text-align:center; padding:26px 16px; background:var(--panel);
+    border:1px solid var(--line); border-radius:var(--radius); margin-bottom:14px;
   }
-  .product-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 30px; font-weight: 700;
-    line-height: 1.2;
-    color: var(--charcoal);
-    margin-bottom: 10px;
+  .result-hero .angle{
+    font-family:'JetBrains Mono',monospace; font-weight:700; font-size:46px; color:var(--text);
   }
-  .review-row {
-    display: flex; align-items: center; gap: 10px;
-    margin-bottom: 16px;
+  .result-hero .angle-label{
+    font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.08em;
+    color:var(--text-dim); text-transform:uppercase; margin-top:4px;
   }
-  .stars { color: #F59E0B; font-size: 15px; letter-spacing: 1px; }
-  .review-count { font-size: 13px; color: var(--red); text-decoration: underline; cursor: pointer; }
-  .price-row {
-    display: flex; align-items: baseline; gap: 12px;
-    margin-bottom: 6px;
+  .badge{
+    display:inline-block; margin-top:14px; padding:7px 16px; border-radius:30px;
+    font-family:'Oswald',sans-serif; font-size:13px; font-weight:600; letter-spacing:0.05em;
+    text-transform:uppercase;
   }
-  .price { font-size: 28px; font-weight: 700; color: var(--charcoal); }
-  .price-old { font-size: 18px; text-decoration: line-through; color: var(--gray); }
-  .price-save { font-size: 13px; color: var(--red); font-weight: 600; }
-  .ships-note {
-    font-size: 13px; color: var(--gray);
-    margin-bottom: 20px;
-    display: flex; align-items: center; gap: 6px;
-  }
-  .ships-note svg { flex-shrink: 0; }
+  .badge.normal{background:rgba(32,150,128,0.18); color:var(--forest); border:1px solid var(--forest);}
+  .badge.mild{background:rgba(212,175,55,0.18); color:var(--gold); border:1px solid var(--gold);}
+  .badge.moderate{background:rgba(217,108,0,0.18); color:var(--burnt); border:1px solid var(--burnt);}
+  .badge.severe{background:rgba(205,127,50,0.2); color:#E8956B; border:1px solid #E8956B;}
 
-  .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+  .sub-readout{
+    display:flex; justify-content:space-between; padding:10px 2px;
+    border-bottom:1px solid var(--line); font-size:13.5px;
+  }
+  .sub-readout:last-child{border-bottom:none;}
+  .sub-readout .k{color:var(--text-dim);}
+  .sub-readout .v{font-family:'JetBrains Mono',monospace; color:var(--text);}
 
-  /* SKU selector */
-  .sku-label { font-size: 13px; font-weight: 600; color: var(--charcoal); margin-bottom: 8px; }
-  .sku-label span { color: var(--gray); font-weight: 400; }
-  .sku-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-  .sku-btn {
-    padding: 8px 16px; border-radius: 4px;
-    border: 1.5px solid var(--border);
-    background: var(--white);
-    font-size: 13px; font-weight: 500;
-    cursor: pointer; transition: all .15s;
-    line-height: 1.3;
-    text-align: center;
+  .disclaimer{
+    font-size:11.5px; line-height:1.5; color:var(--text-dim); margin-top:16px; padding-top:14px;
+    border-top:1px solid var(--line);
   }
-  .sku-btn:hover { border-color: var(--red); color: var(--red); }
-  .sku-btn.selected { border-color: var(--red); background: var(--red-light); color: var(--red-dark); font-weight: 700; }
 
-  /* Delivery date */
-  .delivery-box {
-    background: var(--gold-light);
-    border: 1px solid #FCD34D;
-    border-radius: 6px;
-    padding: 12px 14px;
-    font-size: 13px;
-    margin-bottom: 20px;
-    display: flex; align-items: flex-start; gap: 10px;
+  .log-list{margin-top:10px;}
+  .log-row{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:9px 0; border-bottom:1px solid var(--line); font-size:13px;
   }
-  .delivery-box .icon { font-size: 20px; margin-top: 1px; }
-  .delivery-box strong { display: block; margin-bottom: 2px; color: var(--gold); }
+  .log-row:last-child{border-bottom:none;}
+  .log-row .side{color:var(--text-dim); font-family:'JetBrains Mono',monospace; font-size:11px;}
+  .log-row .val{font-family:'JetBrains Mono',monospace;}
 
-  /* QTY + ADD */
-  .qty-add { display: flex; gap: 10px; margin-bottom: 14px; }
-  .qty-selector {
-    display: flex; align-items: center;
-    border: 1.5px solid var(--border);
-    border-radius: 4px;
-    overflow: hidden;
-    background: var(--white);
-  }
-  .qty-selector button {
-    width: 36px; height: 48px;
-    border: none; background: none;
-    font-size: 18px; cursor: pointer; color: var(--charcoal);
-    transition: background .15s;
-  }
-  .qty-selector button:hover { background: #f3f4f6; }
-  .qty-selector input {
-    width: 44px; height: 48px;
-    border: none; border-left: 1px solid var(--border); border-right: 1px solid var(--border);
-    text-align: center; font-size: 15px; font-family: inherit; font-weight: 600;
-    background: var(--white);
-    outline: none;
-  }
-  .add-to-cart {
-    flex: 1;
-    background: var(--red);
-    color: #fff; border: none;
-    padding: 14px 24px;
-    border-radius: 4px;
-    font-size: 16px; font-weight: 700;
-    cursor: pointer;
-    font-family: inherit;
-    transition: background .2s;
-    letter-spacing: .3px;
-  }
-  .add-to-cart:hover { background: var(--red-dark); }
-  .add-to-cart:active { transform: scale(.98); }
-
-  .wishlist-btn {
-    width: 48px; height: 48px;
-    border: 1.5px solid var(--border);
-    border-radius: 4px;
-    background: var(--white);
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
-    transition: all .15s;
-  }
-  .wishlist-btn:hover { border-color: var(--red); color: var(--red); }
-
-  .guarantee {
-    display: flex; gap: 16px; margin-top: 16px;
-  }
-  .guarantee-item {
-    flex: 1;
-    display: flex; align-items: flex-start; gap: 8px;
-    font-size: 12px; color: var(--gray);
-  }
-  .guarantee-item .g-icon { font-size: 20px; flex-shrink: 0; }
-  .guarantee-item strong { display: block; color: var(--charcoal); font-size: 13px; margin-bottom: 2px; }
-
-  /* ── TABS / DETAILS ── */
-  .details-section {
-    max-width: 1240px; margin: 0 auto;
-    padding: 0 24px 64px;
-  }
-  .tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 0; }
-  .tab {
-    padding: 12px 24px;
-    font-size: 14px; font-weight: 600;
-    cursor: pointer;
-    border-bottom: 3px solid transparent;
-    margin-bottom: -2px;
-    color: var(--gray);
-    transition: color .2s;
-  }
-  .tab.active { color: var(--red); border-bottom-color: var(--red); }
-  .tab:hover { color: var(--red); }
-  .tab-content { display: none; padding: 28px 0; }
-  .tab-content.active { display: block; }
-  .tab-content p { line-height: 1.7; color: #374151; margin-bottom: 12px; max-width: 700px; }
-  .tab-content ul { padding-left: 20px; }
-  .tab-content ul li { line-height: 1.8; color: #374151; font-size: 14px; }
-
-  .detail-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
-    border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
-    max-width: 600px; margin-top: 16px;
-  }
-  .detail-row { display: contents; }
-  .detail-row dt, .detail-row dd {
-    padding: 10px 16px; font-size: 14px;
-    border-bottom: 1px solid var(--border);
-  }
-  .detail-row dt { background: #f9fafb; font-weight: 600; color: var(--charcoal); }
-  .detail-row dd { color: #374151; }
-  .detail-row:last-child dt, .detail-row:last-child dd { border-bottom: none; }
-
-  /* ── UPSELL ── */
-  .upsell-section {
-    background: var(--white);
-    border-top: 1px solid var(--border);
-    padding: 48px 24px;
-  }
-  .upsell-inner { max-width: 1240px; margin: 0 auto; }
-  .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 24px; font-weight: 700;
-    margin-bottom: 24px;
-    color: var(--charcoal);
-  }
-  .upsell-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-  .upsell-card {
-    border: 1px solid var(--border);
-    border-radius: 8px; overflow: hidden;
-    background: var(--white);
-    transition: box-shadow .2s;
-    cursor: pointer;
-  }
-  .upsell-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.10); }
-  .upsell-img {
-    width: 100%; aspect-ratio: 1/1;
-    background: #f0ede8;
-    overflow: hidden;
-  }
-  .upsell-img img { width: 100%; height: 100%; object-fit: cover; }
-  .upsell-body { padding: 12px; }
-  .upsell-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; line-height: 1.3; }
-  .upsell-price { font-size: 15px; font-weight: 700; color: var(--red); }
-
-  /* ── REVIEWS ── */
-  .reviews-section {
-    max-width: 1240px; margin: 0 auto;
-    padding: 48px 24px;
-  }
-  .review-summary { display: flex; gap: 40px; align-items: center; margin-bottom: 32px; }
-  .review-big { text-align: center; }
-  .review-big .num { font-family: 'Playfair Display', serif; font-size: 64px; font-weight: 700; line-height: 1; color: var(--charcoal); }
-  .review-big .stars-lg { font-size: 22px; color: #F59E0B; }
-  .review-big small { display: block; font-size: 13px; color: var(--gray); margin-top: 4px; }
-  .review-bars { flex: 1; }
-  .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-  .bar-row span { font-size: 13px; min-width: 36px; }
-  .bar-track { flex: 1; height: 8px; background: #f3f4f6; border-radius: 4px; overflow: hidden; }
-  .bar-fill { height: 100%; background: #F59E0B; border-radius: 4px; }
-  .review-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .review-card {
-    border: 1px solid var(--border); border-radius: 8px;
-    padding: 20px; background: var(--white);
-  }
-  .reviewer { font-weight: 700; font-size: 14px; margin-bottom: 2px; }
-  .review-date { font-size: 12px; color: var(--gray); margin-bottom: 8px; }
-  .review-card p { font-size: 14px; line-height: 1.6; color: #374151; }
-
-  /* ── FOOTER ── */
-  footer {
-    background: var(--charcoal);
-    color: #9CA3AF;
-    padding: 48px 24px 24px;
-  }
-  .footer-inner { max-width: 1240px; margin: 0 auto; }
-  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
-  .footer-brand { }
-  .footer-logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 20px; font-weight: 700;
-    color: var(--white);
-    margin-bottom: 10px;
-  }
-  footer p { font-size: 13px; line-height: 1.6; }
-  .footer-col h4 { color: var(--white); font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
-  .footer-col a { display: block; color: #9CA3AF; text-decoration: none; font-size: 13px; margin-bottom: 6px; transition: color .2s; }
-  .footer-col a:hover { color: var(--white); }
-  .footer-bottom { border-top: 1px solid #374151; padding-top: 20px; display: flex; justify-content: space-between; font-size: 12px; }
-
-  /* Toast */
-  .toast {
-    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
-    background: var(--charcoal); color: #fff;
-    padding: 12px 24px; border-radius: 6px;
-    font-size: 14px; font-weight: 600;
-    box-shadow: 0 8px 32px rgba(0,0,0,.25);
-    transition: transform .3s cubic-bezier(.34,1.56,.64,1);
-    z-index: 999;
-    display: flex; align-items: center; gap: 10px;
-    pointer-events: none;
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-  .toast .check { color: #4ADE80; font-size: 18px; }
-
-  @media (max-width: 900px) {
-    .product-section { grid-template-columns: 1fr; gap: 24px; }
-    .gallery { position: static; }
-    .upsell-grid { grid-template-columns: repeat(2, 1fr); }
-    .footer-grid { grid-template-columns: 1fr 1fr; }
-    nav { display: none; }
-    .review-cards { grid-template-columns: 1fr; }
-  }
-  @media (max-width: 500px) {
-    .upsell-grid { grid-template-columns: 1fr 1fr; }
-    .guarantee { flex-direction: column; gap: 10px; }
-    .footer-grid { grid-template-columns: 1fr; }
-  }
+  .spacer{flex:1;}
 </style>
 </head>
 <body>
+<div id="app">
 
-<div class="top-bar">
-  🍕 FREE SHIPPING on orders over $75 — <a href="#">Order by Sunday for Wed delivery</a>
+  <header class="brand">
+    <div>
+      <div class="wordmark">SquachAcers <span>Field Scan</span></div>
+      <div class="tag">FOOT SHAPE &amp; ALIGNMENT TRACKER</div>
+    </div>
+  </header>
+
+  <div class="steps" id="stepDots">
+    <div class="dot" data-i="0"></div>
+    <div class="dot" data-i="1"></div>
+    <div class="dot" data-i="2"></div>
+    <div class="dot" data-i="3"></div>
+  </div>
+
+  <!-- INTRO -->
+  <section class="screen active" data-screen="intro">
+    <h1 class="title">Track your foot's alignment</h1>
+    <p class="lede">A guided photo scan estimates how your big toe joint is tracking, using the same angle podiatrists reference on an X-ray — captured from your phone instead.</p>
+
+    <div class="field-card">
+      <span class="label">What you'll need</span>
+      <ol>
+        <li>A hard, flat floor — no thick rugs</li>
+        <li>A sheet of A4 or Letter paper (optional, gives you a size reference)</li>
+        <li>About a minute, standing with full weight on the foot you're scanning</li>
+      </ol>
+    </div>
+
+    <div class="spacer"></div>
+    <button class="btn btn-primary" id="btnStart">Begin scan</button>
+    <button class="btn btn-ghost" id="btnViewLog" style="display:none;">View past scans →</button>
+  </section>
+
+  <!-- PREP -->
+  <section class="screen" data-screen="prep">
+    <h1 class="title">Set up the shot</h1>
+    <p class="lede">Choose the foot you're scanning and whether you're using a paper reference for scale.</p>
+
+    <span class="label" style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.08em; color:var(--bronze); text-transform:uppercase; display:block; margin-bottom:8px;">Foot</span>
+    <div class="toggle-row">
+      <div class="toggle selected" data-side="left">Left</div>
+      <div class="toggle" data-side="right">Right</div>
+    </div>
+
+    <div class="check-row">
+      <input type="checkbox" id="useScale" checked>
+      <label for="useScale">I'm placing a reference sheet under my foot</label>
+      <select class="sheet-select" id="sheetType">
+        <option value="297">A4</option>
+        <option value="279">Letter</option>
+      </select>
+    </div>
+
+    <div class="field-card">
+      <span class="label">Positioning</span>
+      <p class="body-text">Lay the paper flat on the floor, long edge pointing toward your toes. Stand with the foot centered on it, full weight down. Hold the phone flat, facing straight down, about 18 inches above your foot.</p>
+    </div>
+
+    <div class="spacer"></div>
+    <button class="btn btn-primary" id="btnToCapture">Continue to camera</button>
+    <button class="btn btn-secondary" id="btnBackIntro">Back</button>
+  </section>
+
+  <!-- CAPTURE -->
+  <section class="screen" data-screen="capture">
+    <h1 class="title">Frame the shot</h1>
+    <p class="lede">Center your foot in the brackets. Hold the phone level — the readout below will confirm.</p>
+
+    <div class="viewfinder" id="viewfinder">
+      <video id="video" autoplay playsinline muted></video>
+      <div class="vf-scanline"></div>
+      <div class="vf-corner tl"></div>
+      <div class="vf-corner tr"></div>
+      <div class="vf-corner bl"></div>
+      <div class="vf-corner br"></div>
+      <div class="vf-cross"></div>
+      <div class="vf-readout">
+        <span id="vfStatus">Requesting camera…</span>
+        <span id="vfTilt"></span>
+      </div>
+      <div class="vf-error" id="vfError" style="display:none;"></div>
+    </div>
+
+    <button class="btn btn-primary" id="btnCapture" disabled>Capture frame</button>
+    <button class="btn btn-secondary" id="btnBackPrep">Back</button>
+  </section>
+
+  <!-- MARK -->
+  <section class="screen" data-screen="mark">
+    <h1 class="title">Mark the joint</h1>
+    <div class="mark-hint" id="markHint">Tap the points as instructed below.</div>
+
+    <div class="mark-wrap">
+      <canvas id="markCanvas"></canvas>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="btnUndo">Undo point</button>
+      <button class="btn btn-primary" id="btnCalc" disabled>Calculate</button>
+    </div>
+    <button class="btn btn-ghost" id="btnRetake">Retake photo</button>
+  </section>
+
+  <!-- RESULT -->
+  <section class="screen" data-screen="result">
+    <div class="result-hero">
+      <div class="angle" id="resAngle">—°</div>
+      <div class="angle-label">Estimated hallux valgus angle</div>
+      <div class="badge" id="resBadge">—</div>
+    </div>
+
+    <div class="field-card" id="resDetailsCard">
+      <span class="label">Reading</span>
+      <div id="resCopy" class="body-text"></div>
+      <div id="resSubReadouts"></div>
+    </div>
+
+    <div class="field-card" id="resLogCard" style="display:none;">
+      <span class="label">Field log — this session</span>
+      <div class="log-list" id="logList"></div>
+    </div>
+
+    <div class="spacer"></div>
+    <button class="btn btn-primary" id="btnScanOther">Scan other foot</button>
+    <button class="btn btn-secondary" id="btnStartOver">Start over</button>
+
+    <div class="disclaimer">
+      This tool estimates foot shape and joint alignment from a single photo for fit and comfort purposes. It is not a diagnostic device and does not replace a weight-bearing X-ray or a podiatrist's evaluation. If you have pain, numbness, or a worsening bunion, see a foot care professional.
+    </div>
+  </section>
+
 </div>
-
-<header>
-  <div class="header-inner">
-    <a href="#" class="logo">Chicago Stuffed Pizza Co.<span>Est. 1982 · Deep Dish Delivered</span></a>
-    <nav>
-      <a href="#">Pizzas</a>
-      <a href="#">Bundles</a>
-      <a href="#">Gift Boxes</a>
-      <a href="#">Our Story</a>
-    </nav>
-    <div class="header-actions">
-      <button class="cart-btn" onclick="handleAddToCart()">
-        🛒 Cart <span class="cart-count" id="cartCount">0</span>
-      </button>
-    </div>
-  </div>
-</header>
-
-<div class="breadcrumb">
-  <a href="#">Home</a><span class="sep">›</span>
-  <a href="#">Deep Dish Pizzas</a><span class="sep">›</span>
-  <span>Chicago Stuffed Spinach & Sausage</span>
-</div>
-
-<section class="product-section">
-  <!-- GALLERY -->
-  <div class="gallery">
-    <div class="main-image" id="mainImage">
-      <img id="mainImg" src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&q=80" alt="Chicago Stuffed Spinach & Sausage Deep Dish Pizza">
-      <div class="badge-overlay">Fan Favorite</div>
-    </div>
-    <div class="thumbs">
-      <div class="thumb active" onclick="switchImg(this, 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&q=80')">
-        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&q=80" alt="">
-      </div>
-      <div class="thumb" onclick="switchImg(this, 'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=800&q=80')">
-        <img src="https://images.unsplash.com/photo-1628840042765-356cda07504e?w=200&q=80" alt="">
-      </div>
-      <div class="thumb" onclick="switchImg(this, 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80')">
-        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=200&q=80" alt="">
-      </div>
-      <div class="thumb" onclick="switchImg(this, 'https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?w=800&q=80')">
-        <img src="https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?w=200&q=80" alt="">
-      </div>
-    </div>
-  </div>
-
-  <!-- PRODUCT INFO -->
-  <div class="product-info">
-    <div class="product-tag">Deep Dish · Chicago Style</div>
-    <h1 class="product-title">Chicago Stuffed Spinach &amp; Sausage Deep Dish Pizza</h1>
-
-    <div class="review-row">
-      <span class="stars">★★★★★</span>
-      <span style="font-size:13px;color:var(--gray);">4.9</span>
-      <span class="review-count">312 Reviews</span>
-    </div>
-
-    <div class="price-row">
-      <span class="price" id="displayPrice">$59.95</span>
-      <span class="price-old">$72.00</span>
-      <span class="price-save">Save $12.05</span>
-    </div>
-    <div class="ships-note">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      Ships frozen · Ready to bake in 45 min
-    </div>
-
-    <hr class="divider">
-
-    <!-- SKU SIZE -->
-    <div class="sku-label">Size <span id="selectedSize">— 9" (Feeds 2–3)</span></div>
-    <div class="sku-grid" id="sizeGrid">
-      <button class="sku-btn selected" onclick="selectSku(this, '9&quot; (Feeds 2–3)', '$59.95')" data-price="$59.95">
-        9" Pizza<br><small style="font-weight:400;color:var(--gray)">Feeds 2–3</small>
-      </button>
-      <button class="sku-btn" onclick="selectSku(this, '12&quot; (Feeds 4–5)', '$79.95')" data-price="$79.95">
-        12" Pizza<br><small style="font-weight:400;color:var(--gray)">Feeds 4–5</small>
-      </button>
-      <button class="sku-btn" onclick="selectSku(this, 'Party Pack (3×9&quot;)', '$159.95')" data-price="$159.95">
-        Party Pack<br><small style="font-weight:400;color:var(--gray)">3 × 9" Pizzas</small>
-      </button>
-    </div>
-
-    <!-- SKU CRUST -->
-    <div class="sku-label">Crust <span id="selectedCrust">— Classic Butter</span></div>
-    <div class="sku-grid" id="crustGrid">
-      <button class="sku-btn selected" onclick="selectCrust(this, 'Classic Butter')">Classic Butter</button>
-      <button class="sku-btn" onclick="selectCrust(this, 'Herb & Garlic')">Herb &amp; Garlic</button>
-      <button class="sku-btn" onclick="selectCrust(this, 'Whole Wheat')">Whole Wheat</button>
-    </div>
-
-    <!-- DELIVERY BOX -->
-    <div class="delivery-box">
-      <span class="icon">📦</span>
-      <div>
-        <strong>Order within 3 hrs to get it by Wednesday, April 1</strong>
-        Ships in an insulated cooler with dry ice · Arrives frozen &amp; oven-ready
-      </div>
-    </div>
-
-    <!-- QTY + ADD -->
-    <div class="qty-add">
-      <div class="qty-selector">
-        <button onclick="changeQty(-1)">−</button>
-        <input type="number" value="1" min="1" id="qty" readonly>
-        <button onclick="changeQty(1)">+</button>
-      </div>
-      <button class="add-to-cart" onclick="handleAddToCart()">Add to Cart</button>
-      <button class="wishlist-btn" onclick="this.textContent='❤️'" title="Save to wishlist">🤍</button>
-    </div>
-
-    <!-- GUARANTEE -->
-    <div class="guarantee">
-      <div class="guarantee-item">
-        <span class="g-icon">🏆</span>
-        <div><strong>Satisfaction Guarantee</strong>100% money-back if you're not delighted</div>
-      </div>
-      <div class="guarantee-item">
-        <span class="g-icon">❄️</span>
-        <div><strong>Ships Frozen</strong>Packed with dry ice for safe arrival</div>
-      </div>
-      <div class="guarantee-item">
-        <span class="g-icon">🎁</span>
-        <div><strong>Gift Ready</strong>Add a personal message at checkout</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- TABS -->
-<div class="details-section">
-  <div class="tabs">
-    <div class="tab active" onclick="switchTab(this,'desc')">Description</div>
-    <div class="tab" onclick="switchTab(this,'ingredients')">Ingredients</div>
-    <div class="tab" onclick="switchTab(this,'heating')">Heating Instructions</div>
-    <div class="tab" onclick="switchTab(this,'shipping')">Shipping &amp; Returns</div>
-  </div>
-
-  <div id="desc" class="tab-content active">
-    <p>Born on the South Side of Chicago, our Stuffed Deep Dish is the real deal — two layers of hand-pressed butter crust encasing a generous filling of whole-milk mozzarella, fresh spinach, and fennel-spiced Italian sausage, then blanketed in our slow-simmered San Marzano tomato sauce.</p>
-    <p>Every pizza is assembled by hand in our Chicago kitchen, flash-frozen to lock in freshness, and shipped directly to your door. All you need is an oven and 45 minutes.</p>
-    <dl class="detail-grid">
-      <div class="detail-row"><dt>Weight</dt><dd>2.8 lbs (9") / 4.1 lbs (12")</dd></div>
-      <div class="detail-row"><dt>Servings</dt><dd>2–3 per 9" / 4–5 per 12"</dd></div>
-      <div class="detail-row"><dt>Storage</dt><dd>Freeze up to 6 months</dd></div>
-      <div class="detail-row"><dt>Bake Time</dt><dd>40–45 min at 375°F</dd></div>
-      <div class="detail-row"><dt>Contains</dt><dd>Wheat, Milk, Pork</dd></div>
-      <div class="detail-row"><dt>Ships From</dt><dd>Chicago, IL</dd></div>
-    </dl>
-  </div>
-
-  <div id="ingredients" class="tab-content">
-    <p><strong>Crust:</strong> Enriched wheat flour, butter (cream, salt), water, yeast, sugar, salt, olive oil.</p>
-    <p><strong>Filling:</strong> Whole-milk mozzarella (pasteurized milk, cheese cultures, salt, enzymes), Italian sausage (pork, fennel seed, garlic, red pepper), fresh spinach, garlic, olive oil.</p>
-    <p><strong>Sauce:</strong> San Marzano crushed tomatoes, olive oil, fresh basil, garlic, salt, black pepper, dried oregano.</p>
-    <p style="font-size:13px;color:var(--gray);">Contains: Wheat, Milk, Pork. Produced in a facility that handles tree nuts and soy.</p>
-  </div>
-
-  <div id="heating" class="tab-content">
-    <ul>
-      <li><strong>Preheat</strong> oven to 375°F (190°C).</li>
-      <li><strong>Remove</strong> pizza from all packaging. Do not thaw before baking.</li>
-      <li><strong>Place</strong> frozen pizza on center oven rack.</li>
-      <li><strong>Bake</strong> 40–45 min until crust is golden and cheese is bubbling.</li>
-      <li><strong>Rest</strong> 5 minutes before cutting. Use a sharp serrated knife.</li>
-      <li>Internal temperature should reach 165°F.</li>
-    </ul>
-    <p style="margin-top:14px;font-size:13px;color:var(--gray);">Oven temps vary. Do not use microwave. Convection ovens: reduce to 350°F and check at 35 min.</p>
-  </div>
-
-  <div id="shipping" class="tab-content">
-    <p>All pizzas ship frozen via 2-day air in an insulated foam cooler with dry ice. Orders placed before 12PM CT Monday–Thursday ship same day.</p>
-    <p><strong>Free shipping</strong> on orders over $75. Standard rate of $14.95 on orders under $75.</p>
-    <p>We stand behind every pizza. If your order arrives damaged or you're unsatisfied for any reason, contact us within 7 days for a full refund or replacement — no questions asked.</p>
-  </div>
-</div>
-
-<!-- UPSELL -->
-<div class="upsell-section">
-  <div class="upsell-inner">
-    <div class="section-title">You Might Also Love</div>
-    <div class="upsell-grid">
-      <div class="upsell-card">
-        <div class="upsell-img"><img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400&q=80" alt="Pepperoni Deep Dish"></div>
-        <div class="upsell-body">
-          <div class="upsell-name">Classic Pepperoni Deep Dish</div>
-          <div class="upsell-price">$59.95</div>
-        </div>
-      </div>
-      <div class="upsell-card">
-        <div class="upsell-img"><img src="https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?w=400&q=80" alt="Margherita"></div>
-        <div class="upsell-body">
-          <div class="upsell-name">Four-Cheese Stuffed Deep Dish</div>
-          <div class="upsell-price">$57.95</div>
-        </div>
-      </div>
-      <div class="upsell-card">
-        <div class="upsell-img"><img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&q=80" alt="Gift Box"></div>
-        <div class="upsell-body">
-          <div class="upsell-name">Chicago Pizza Gift Box (2-pack)</div>
-          <div class="upsell-price">$109.95</div>
-        </div>
-      </div>
-      <div class="upsell-card">
-        <div class="upsell-img"><img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&q=80" alt="Sausage Only"></div>
-        <div class="upsell-body">
-          <div class="upsell-name">Italian Beef &amp; Giardiniera Deep Dish</div>
-          <div class="upsell-price">$62.95</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- REVIEWS -->
-<div class="reviews-section">
-  <div class="section-title">Customer Reviews</div>
-  <div class="review-summary">
-    <div class="review-big">
-      <div class="num">4.9</div>
-      <div class="stars-lg">★★★★★</div>
-      <small>312 reviews</small>
-    </div>
-    <div class="review-bars">
-      <div class="bar-row"><span>5 ★</span><div class="bar-track"><div class="bar-fill" style="width:88%"></div></div><span style="color:var(--gray)">88%</span></div>
-      <div class="bar-row"><span>4 ★</span><div class="bar-track"><div class="bar-fill" style="width:9%"></div></div><span style="color:var(--gray)">9%</span></div>
-      <div class="bar-row"><span>3 ★</span><div class="bar-track"><div class="bar-fill" style="width:2%"></div></div><span style="color:var(--gray)">2%</span></div>
-      <div class="bar-row"><span>2 ★</span><div class="bar-track"><div class="bar-fill" style="width:1%"></div></div><span style="color:var(--gray)">1%</span></div>
-      <div class="bar-row"><span>1 ★</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span style="color:var(--gray)">0%</span></div>
-    </div>
-  </div>
-  <div class="review-cards">
-    <div class="review-card">
-      <div class="stars" style="font-size:14px;margin-bottom:4px;">★★★★★</div>
-      <div class="reviewer">Michael T. — Naperville, IL</div>
-      <div class="review-date">March 14, 2026 · Verified Purchase</div>
-      <p>Tastes exactly like Lou Malnati's without leaving the house. The crust is buttery, the sausage is fennel-forward, and the sauce has real depth. My family demolished a 12" in 15 minutes flat.</p>
-    </div>
-    <div class="review-card">
-      <div class="stars" style="font-size:14px;margin-bottom:4px;">★★★★★</div>
-      <div class="reviewer">Sarah K. — Austin, TX</div>
-      <div class="review-date">March 9, 2026 · Verified Purchase</div>
-      <p>I grew up in Chicago and have been chasing this flavor for 10 years since moving south. This is the closest thing I've found. Arrived perfectly frozen, baked up gorgeous. Already ordered two more.</p>
-    </div>
-    <div class="review-card">
-      <div class="stars" style="font-size:14px;margin-bottom:4px;">★★★★☆</div>
-      <div class="reviewer">James R. — New York, NY</div>
-      <div class="review-date">February 28, 2026 · Verified Purchase</div>
-      <p>As a New Yorker I was skeptical, but this genuinely won me over. The stuffed crust concept is wild and delicious. Only wish the 9" were a bit bigger — I ordered the 12" on my reorder.</p>
-    </div>
-    <div class="review-card">
-      <div class="stars" style="font-size:14px;margin-bottom:4px;">★★★★★</div>
-      <div class="reviewer">Linda M. — Denver, CO</div>
-      <div class="review-date">February 21, 2026 · Verified Purchase</div>
-      <p>Ordered the Party Pack for a football watch party — absolute hit. Everyone was asking where I got it. Packaging was excellent, dry ice kept everything solid even with a shipping delay.</p>
-    </div>
-  </div>
-</div>
-
-<footer>
-  <div class="footer-inner">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <div class="footer-logo">Chicago Stuffed Pizza Co.</div>
-        <p>Authentic Chicago deep dish, shipped frozen and oven-ready to your door since 1982. Made with the same recipes, the same ingredients, the same love.</p>
-      </div>
-      <div class="footer-col">
-        <h4>Shop</h4>
-        <a href="#">Deep Dish Pizzas</a>
-        <a href="#">Party Packs</a>
-        <a href="#">Gift Boxes</a>
-        <a href="#">Bundles &amp; Deals</a>
-      </div>
-      <div class="footer-col">
-        <h4>Company</h4>
-        <a href="#">Our Story</a>
-        <a href="#">Blog</a>
-        <a href="#">Press</a>
-        <a href="#">Careers</a>
-      </div>
-      <div class="footer-col">
-        <h4>Help</h4>
-        <a href="#">FAQ</a>
-        <a href="#">Track Order</a>
-        <a href="#">Returns</a>
-        <a href="#">Contact Us</a>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© 2026 Chicago Stuffed Pizza Co. All rights reserved.</span>
-      <span>Privacy Policy · Terms of Use</span>
-    </div>
-  </div>
-</footer>
-
-<!-- Toast -->
-<div class="toast" id="toast"><span class="check">✓</span> Added to cart!</div>
 
 <script>
-  let cartCount = 0;
+(function(){
+  const screens = ['intro','prep','capture','mark','result'];
+  const stepFor = {intro:0, prep:0, capture:1, mark:2, result:3};
+  const state = {
+    side: 'left',
+    useScale: true,
+    sheetMM: 297,
+    stream: null,
+    capturedImg: null, // Image object
+    canvasW: 0, canvasH: 0,
+    points: [], // {x,y}
+    needsScalePoints: true,
+    scalePxPerMM: null,
+    orientationOK: false,
+    log: []
+  };
 
-  function changeQty(delta) {
-    const input = document.getElementById('qty');
-    const val = parseInt(input.value) + delta;
-    if (val >= 1) input.value = val;
+  function showScreen(name){
+    document.querySelectorAll('.screen').forEach(s=>{
+      s.classList.toggle('active', s.dataset.screen===name);
+    });
+    document.querySelectorAll('#stepDots .dot').forEach(d=>{
+      const i = parseInt(d.dataset.i,10);
+      const cur = stepFor[name];
+      d.classList.toggle('active', i===cur);
+      d.classList.toggle('done', i<cur);
+    });
   }
 
-  function selectSku(btn, label, price) {
-    document.querySelectorAll('#sizeGrid .sku-btn').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-    document.getElementById('selectedSize').textContent = '— ' + label;
-    document.getElementById('displayPrice').textContent = price;
+  // ---------- INTRO ----------
+  document.getElementById('btnStart').addEventListener('click', ()=>{
+    showScreen('prep');
+  });
+
+  // ---------- PREP ----------
+  document.querySelectorAll('.toggle[data-side]').forEach(t=>{
+    t.addEventListener('click', ()=>{
+      document.querySelectorAll('.toggle[data-side]').forEach(x=>x.classList.remove('selected'));
+      t.classList.add('selected');
+      state.side = t.dataset.side;
+    });
+  });
+  document.getElementById('useScale').addEventListener('change', (e)=>{
+    state.useScale = e.target.checked;
+    state.needsScalePoints = state.useScale;
+  });
+  document.getElementById('sheetType').addEventListener('change', (e)=>{
+    state.sheetMM = parseInt(e.target.value,10);
+  });
+  document.getElementById('btnBackIntro').addEventListener('click', ()=> showScreen('intro'));
+
+  document.getElementById('btnToCapture').addEventListener('click', async ()=>{
+    state.useScale = document.getElementById('useScale').checked;
+    state.needsScalePoints = state.useScale;
+    state.sheetMM = parseInt(document.getElementById('sheetType').value,10);
+
+    // Request device orientation permission on iOS (must be in user-gesture call stack)
+    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function'){
+      try { await DeviceOrientationEvent.requestPermission(); } catch(e){ /* ignore, fallback handled below */ }
+    }
+    showScreen('capture');
+    startCamera();
+    startTilt();
+  });
+
+  // ---------- CAPTURE ----------
+  const video = document.getElementById('video');
+  const vfStatus = document.getElementById('vfStatus');
+  const vfTilt = document.getElementById('vfTilt');
+  const vfError = document.getElementById('vfError');
+  const btnCapture = document.getElementById('btnCapture');
+
+  async function startCamera(){
+    vfError.style.display = 'none';
+    video.style.display = 'block';
+    btnCapture.disabled = true;
+    vfStatus.textContent = 'Requesting camera…';
+    try{
+      if (state.stream){ state.stream.getTracks().forEach(t=>t.stop()); }
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: 'environment' }, width:{ideal:1280}, height:{ideal:1280} },
+        audio: false
+      });
+      state.stream = stream;
+      video.srcObject = stream;
+      vfStatus.textContent = 'Camera live';
+      btnCapture.disabled = false;
+    }catch(err){
+      video.style.display = 'none';
+      vfError.style.display = 'flex';
+      vfError.innerHTML = 'Camera unavailable.<br><span style="color:var(--text-dim)">This usually means camera permission was blocked, or the page isn\\'t running on a secure (https) connection. Open this file from a hosted https:// address and allow camera access when prompted.</span>';
+      vfStatus.textContent = 'No camera';
+    }
   }
 
-  function selectCrust(btn, label) {
-    document.querySelectorAll('#crustGrid .sku-btn').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-    document.getElementById('selectedCrust').textContent = '— ' + label;
+  let tiltHandler = null;
+  function startTilt(){
+    if (tiltHandler) return;
+    if (typeof window.DeviceOrientationEvent === 'undefined'){
+      vfTilt.textContent = '';
+      return;
+    }
+    tiltHandler = function(e){
+      if (e.beta === null || e.gamma === null){ vfTilt.textContent=''; return; }
+      // Phone screen facing down over the foot: beta tends toward ±180.
+      const flatness = Math.abs(180 - Math.abs(e.beta)) + Math.abs(e.gamma);
+      if (flatness < 10){
+        vfTilt.innerHTML = '<span class="ok">● LEVEL</span>';
+      } else {
+        vfTilt.innerHTML = '<span class="warn">● TILT — adjust</span>';
+      }
+    };
+    window.addEventListener('deviceorientation', tiltHandler);
+    setTimeout(()=>{
+      if (vfTilt.textContent===''){ vfTilt.textContent='Align by eye'; }
+    }, 1500);
+  }
+  function stopTilt(){
+    if (tiltHandler){ window.removeEventListener('deviceorientation', tiltHandler); tiltHandler=null; }
+  }
+  function stopCamera(){
+    if (state.stream){ state.stream.getTracks().forEach(t=>t.stop()); state.stream=null; }
   }
 
-  function switchImg(thumb, src) {
-    document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
-    thumb.classList.add('active');
-    document.getElementById('mainImg').src = src;
+  document.getElementById('btnBackPrep').addEventListener('click', ()=>{
+    stopCamera(); stopTilt();
+    showScreen('prep');
+  });
+
+  btnCapture.addEventListener('click', ()=>{
+    const w = video.videoWidth || 720, h = video.videoHeight || 960;
+    const off = document.createElement('canvas');
+    off.width = w; off.height = h;
+    off.getContext('2d').drawImage(video, 0, 0, w, h);
+    const img = new Image();
+    img.onload = ()=>{
+      state.capturedImg = img;
+      state.canvasW = w; state.canvasH = h;
+      state.points = [];
+      stopCamera(); stopTilt();
+      enterMarkScreen();
+    };
+    img.src = off.toDataURL('image/jpeg', 0.92);
+  });
+
+  // ---------- MARK ----------
+  const markCanvas = document.getElementById('markCanvas');
+  const mctx = markCanvas.getContext('2d');
+  const markHint = document.getElementById('markHint');
+  const btnCalc = document.getElementById('btnCalc');
+  const btnUndo = document.getElementById('btnUndo');
+
+  function pointSequence(){
+    return state.needsScalePoints
+      ? ['Tap one corner of the paper\\'s long edge', 'Tap the other end of that same edge', 'Tap your heel / inner arch', 'Tap the big toe joint (the bunion bump)', 'Tap the tip of your big toe']
+      : ['Tap your heel / inner arch', 'Tap the big toe joint (the bunion bump)', 'Tap the tip of your big toe'];
   }
 
-  function switchTab(tab, id) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById(id).classList.add('active');
+  function enterMarkScreen(){
+    markCanvas.width = state.canvasW;
+    markCanvas.height = state.canvasH;
+    redrawMark();
+    updateMarkHint();
+    showScreen('mark');
   }
 
-  function handleAddToCart() {
-    const qty = parseInt(document.getElementById('qty').value);
-    cartCount += qty;
-    document.getElementById('cartCount').textContent = cartCount;
-    const toast = document.getElementById('toast');
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2500);
+  function updateMarkHint(){
+    const seq = pointSequence();
+    if (state.points.length < seq.length){
+      markHint.textContent = (state.points.length+1) + ' / ' + seq.length + ' — ' + seq[state.points.length];
+      btnCalc.disabled = true;
+    } else {
+      markHint.textContent = 'All points placed. Tap Calculate, or undo to adjust.';
+      btnCalc.disabled = false;
+    }
   }
+
+  function redrawMark(){
+    mctx.clearRect(0,0,markCanvas.width, markCanvas.height);
+    mctx.drawImage(state.capturedImg, 0, 0, markCanvas.width, markCanvas.height);
+    const seq = pointSequence();
+    const colors = state.needsScalePoints
+      ? ['#D4AF37','#D4AF37','#209680','#D96C00','#209680']
+      : ['#209680','#D96C00','#209680'];
+
+    state.points.forEach((p,i)=>{
+      mctx.beginPath();
+      mctx.arc(p.x, p.y, 9, 0, Math.PI*2);
+      mctx.fillStyle = colors[i] || '#EDE7D9';
+      mctx.fill();
+      mctx.lineWidth = 2;
+      mctx.strokeStyle = '#14170F';
+      mctx.stroke();
+      mctx.font = 'bold 16px monospace';
+      mctx.fillStyle = '#14170F';
+      mctx.textAlign = 'center';
+      mctx.textBaseline = 'middle';
+      mctx.fillText(String(i+1), p.x, p.y);
+    });
+
+    const offset = state.needsScalePoints ? 2 : 0;
+    if (state.needsScalePoints && state.points.length >= 2){
+      drawLine(state.points[0], state.points[1], '#D4AF37', true);
+    }
+    if (state.points.length >= offset+2){
+      drawLine(state.points[offset], state.points[offset+1], '#9CA68C');
+    }
+    if (state.points.length >= offset+3){
+      drawLine(state.points[offset+1], state.points[offset+2], '#9CA68C');
+    }
+  }
+
+  function drawLine(a,b,color,dashed){
+    mctx.beginPath();
+    mctx.moveTo(a.x,a.y);
+    mctx.lineTo(b.x,b.y);
+    mctx.strokeStyle = color;
+    mctx.lineWidth = 3;
+    if (dashed) mctx.setLineDash([8,6]); else mctx.setLineDash([]);
+    mctx.stroke();
+    mctx.setLineDash([]);
+  }
+
+  function canvasPosFromEvent(e){
+    const rect = markCanvas.getBoundingClientRect();
+    const scaleX = markCanvas.width / rect.width;
+    const scaleY = markCanvas.height / rect.height;
+    const clientX = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0].clientX);
+    const clientY = e.clientY !== undefined ? e.clientY : (e.touches && e.touches[0].clientY);
+    return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
+  }
+
+  markCanvas.addEventListener('pointerdown', (e)=>{
+    const seq = pointSequence();
+    if (state.points.length >= seq.length) return;
+    const pos = canvasPosFromEvent(e);
+    state.points.push(pos);
+    redrawMark();
+    updateMarkHint();
+  });
+
+  btnUndo.addEventListener('click', ()=>{
+    state.points.pop();
+    redrawMark();
+    updateMarkHint();
+  });
+
+  document.getElementById('btnRetake').addEventListener('click', ()=>{
+    state.points = [];
+    showScreen('capture');
+    startCamera();
+    startTilt();
+  });
+
+  btnCalc.addEventListener('click', ()=>{
+    computeResult();
+    showScreen('result');
+  });
+
+  // ---------- RESULT ----------
+  function dist(a,b){ return Math.hypot(b.x-a.x, b.y-a.y); }
+
+  function angleAtVertex(A,B,C){
+    const v1 = {x:A.x-B.x, y:A.y-B.y};
+    const v2 = {x:C.x-B.x, y:C.y-B.y};
+    const dot = v1.x*v2.x + v1.y*v2.y;
+    const mag1 = Math.hypot(v1.x,v1.y), mag2 = Math.hypot(v2.x,v2.y);
+    if (mag1===0 || mag2===0) return null;
+    let cos = dot/(mag1*mag2);
+    cos = Math.max(-1, Math.min(1, cos));
+    return Math.acos(cos) * 180/Math.PI; // interior angle ABC
+  }
+
+  function classify(hva){
+    if (hva < 15) return {key:'normal', label:'Normal range', copy:'Your big toe is tracking straight relative to the joint. No alignment concerns from this scan.'};
+    if (hva < 20) return {key:'mild', label:'Mild deviation', copy:'A slight inward drift at the joint. Worth keeping an eye on, especially in narrow toe boxes.'};
+    if (hva < 40) return {key:'moderate', label:'Moderate deviation', copy:'A noticeable bunion angle. Wide, modular, or adjustable toe-box footwear can reduce pressure on the joint day to day.'};
+    return {key:'severe', label:'Severe deviation', copy:'A pronounced angle at the joint. This is worth a conversation with a podiatrist, alongside footwear that takes pressure off the area.'};
+  }
+
+  function computeResult(){
+    const offset = state.needsScalePoints ? 2 : 0;
+    const A = state.points[offset];     // heel / arch
+    const B = state.points[offset+1];   // MTP joint / bunion
+    const C = state.points[offset+2];   // toe tip
+
+    const interior = angleAtVertex(A,B,C);
+    let hva = interior===null ? null : Math.max(0, 180 - interior);
+
+    let scalePxPerMM = null;
+    if (state.needsScalePoints){
+      const p1 = state.points[0], p2 = state.points[1];
+      const px = dist(p1,p2);
+      if (px > 0) scalePxPerMM = px / state.sheetMM;
+    }
+
+    const cat = hva===null ? {key:'normal',label:'Unable to read',copy:'The marked points were too close together to calculate an angle. Try retaking the photo.'} : classify(hva);
+
+    document.getElementById('resAngle').textContent = hva===null ? '—°' : hva.toFixed(1)+'°';
+    const badgeEl = document.getElementById('resBadge');
+    badgeEl.className = 'badge ' + cat.key;
+    badgeEl.textContent = cat.label;
+    document.getElementById('resCopy').textContent = cat.copy;
+
+    const subEl = document.getElementById('resSubReadouts');
+    subEl.innerHTML = '';
+    function addRow(k,v){
+      const row = document.createElement('div');
+      row.className = 'sub-readout';
+      row.innerHTML = '<span class="k">'+k+'</span><span class="v">'+v+'</span>';
+      subEl.appendChild(row);
+    }
+    addRow('Foot scanned', state.side === 'left' ? 'Left' : 'Right');
+    if (scalePxPerMM){
+      const toeLenMM = dist(B,C) / scalePxPerMM;
+      addRow('Toe length (joint to tip)', (toeLenMM/10).toFixed(1)+' cm');
+    }
+    addRow('Reference', state.needsScalePoints ? (state.sheetMM===297?'A4 sheet':'Letter sheet') : 'None (angle only)');
+
+    state.log.push({side: state.side, hva: hva, cat: cat.key, label: cat.label});
+    renderLog();
+  }
+
+  function renderLog(){
+    const card = document.getElementById('resLogCard');
+    const list = document.getElementById('logList');
+    if (state.log.length < 1){ card.style.display='none'; return; }
+    card.style.display = 'block';
+    list.innerHTML = '';
+    state.log.forEach(entry=>{
+      const row = document.createElement('div');
+      row.className = 'log-row';
+      row.innerHTML = '<span class="side">'+(entry.side==='left'?'LEFT':'RIGHT')+'</span><span>'+entry.label+'</span><span class="val">'+(entry.hva===null?'—':entry.hva.toFixed(1)+'°')+'</span>';
+      list.appendChild(row);
+    });
+    document.getElementById('btnViewLog').style.display = state.log.length ? 'block' : 'none';
+  }
+
+  document.getElementById('btnScanOther').addEventListener('click', ()=>{
+    state.side = state.side === 'left' ? 'right' : 'left';
+    document.querySelectorAll('.toggle[data-side]').forEach(x=>{
+      x.classList.toggle('selected', x.dataset.side === state.side);
+    });
+    state.points = [];
+    showScreen('prep');
+  });
+
+  document.getElementById('btnStartOver').addEventListener('click', ()=>{
+    state.points = [];
+    showScreen('intro');
+  });
+
+  document.getElementById('btnViewLog').addEventListener('click', ()=>{
+    showScreen('result');
+  });
+
+  showScreen('intro');
+})();
 </script>
 </body>
 </html>
